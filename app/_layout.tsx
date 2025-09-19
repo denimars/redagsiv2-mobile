@@ -2,6 +2,8 @@ import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { ThemeProvider } from '../context/ThemeContext';
+import { LoadingProvider } from '../context/LoadingContext';
+import LoadingOverlay from '../components/LoadingOverlay';
 
 
 
@@ -20,10 +22,13 @@ export default function RootLayout() {
 
   return (
     <ThemeProvider>
-      <Stack screenOptions={{ headerShown:false }}>
-         <StatusBar style="auto"  />
-        <Stack.Screen name="login" />
-      </Stack>
+      <LoadingProvider>
+        <Stack screenOptions={{ headerShown:false }}>
+           <StatusBar style="auto"  />
+          <Stack.Screen name="login" />
+        </Stack>
+        <LoadingOverlay />
+      </LoadingProvider>
     </ThemeProvider>
   );
 }

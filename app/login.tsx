@@ -4,17 +4,26 @@ import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text } from "re
 import Button from "../components/button";
 import Logo from "../components/logo";
 import TextInput from "../components/TextInput";
+import { useLoading } from "../context/LoadingContext";
 import { useTheme } from "../context/ThemeContext";
 
 export default function Login(){
     const { colors, fonts } = useTheme();
+    const { showLoading, hideLoading } = useLoading();
     const styles = createStyles(colors, fonts);
     
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
 
-    const handleLogin = () => {
+    const handleLogin = async () => {
+        showLoading();
         console.log('Login attempt:', { username, password });
+        
+        // Simulate API call with 2 second delay
+        setTimeout(() => {
+            hideLoading();
+            console.log('Login completed');
+        }, 2000);
     };
 
     return (
@@ -28,12 +37,11 @@ export default function Login(){
                 showsVerticalScrollIndicator={true}
             >
                 <Logo/>
-                <Text style={styles.heading}>Login</Text>
-                <Text style={styles.bodyText}>Welcome back! Please sign in to continue.</Text>
+                <Text style={styles.heading}>Redagsi</Text>
                 
                 <TextInput
                     label="Username"
-                    placeholder="Enter your username"
+                    placeholder="Username"
                     value={username}
                     onChangeText={setUsername}
                     style={{ marginTop: 20 }}
@@ -41,7 +49,7 @@ export default function Login(){
                 
                 <TextInput
                     label="Password"
-                    placeholder="Enter your password"
+                    placeholder="Password"
                     value={password}
                     onChangeText={setPassword}
                     secureTextEntry={true}
@@ -75,7 +83,8 @@ const createStyles = (colors: any, fonts: any) => StyleSheet.create({
         color: colors.text,
         fontFamily: fonts.heading,
         fontSize: 24,
-        marginBottom: 20
+        marginBottom: 20,
+        marginTop: 12,
     },
     bodyText: {
         color: colors.text,

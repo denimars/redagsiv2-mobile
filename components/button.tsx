@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { StyleSheet, Text, TextStyle, TouchableOpacity, ViewStyle } from 'react-native';
+import { ActivityIndicator, StyleSheet, Text, TextStyle, TouchableOpacity, ViewStyle } from 'react-native';
 import { useTheme } from '../context/ThemeContext';
 
 interface ButtonProps {
@@ -12,6 +12,7 @@ interface ButtonProps {
     textStyle?: TextStyle;
     disabled?: boolean;
     variant?: 'primary' | 'secondary' | 'outline';
+    loading?: boolean;
 }
 
 export default function Button({
@@ -22,7 +23,8 @@ export default function Button({
     style,
     textStyle,
     disabled = false,
-    variant = 'primary'
+    variant = 'primary',
+    loading = false
 }: ButtonProps) {
     const { colors, fonts } = useTheme();
 
@@ -65,22 +67,29 @@ export default function Button({
                 styles.button,
                 variantStyles,
                 style,
-                disabled && styles.disabled
+                (disabled || loading) && styles.disabled
             ]}
             onPress={onPress}
-            disabled={disabled}
+            disabled={disabled || loading}
             activeOpacity={0.8}
         >
-            <Text style={[
-                styles.buttonText,
-                { 
-                    color: getTextColor(),
-                    fontFamily: fonts.button 
-                },
-                textStyle
-            ]}>
-                {title}
-            </Text>
+            {loading ? (
+                <ActivityIndicator 
+                    size="small" 
+                    color={getTextColor()} 
+                />
+            ) : (
+                <Text style={[
+                    styles.buttonText,
+                    { 
+                        color: getTextColor(),
+                        fontFamily: fonts.button 
+                    },
+                    textStyle
+                ]}>
+                    {title}
+                </Text>
+            )}
         </TouchableOpacity>
     );
 }
