@@ -5,6 +5,7 @@ import { Controller, useForm } from "react-hook-form";
 import { Dimensions, KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text, View } from "react-native";
 import { z } from "zod";
 import Button from "../components/button";
+import { useLogin } from "../hooks/useLogin";
 
 
 import TextInput from "../components/TextInput";
@@ -35,13 +36,18 @@ export default function Login(){
         }
     })
 
+    const {login, isLoading, loginError} = useLogin();
+
     const handleLogin = async (data:FormData) => {
         showLoading();
-
-        setTimeout(() => {
+        try {
+            await login(data.userName, data.password);
+           
+        } catch (error) {
+            console.error('Login error:', error);
+        } finally {
             hideLoading();
-            console.log('Login completed');
-        }, 2000);
+        }
     };
 
     return (  
@@ -61,6 +67,7 @@ export default function Login(){
                     showsVerticalScrollIndicator={false}
                 >
                     <Text style={styles.heading}>Redagsi</Text>
+                    {loginError && <Text style={styles.messageError}>{loginError}</Text>}
                     
                     <View style={styles.formLogin}>
                      
@@ -79,8 +86,7 @@ export default function Login(){
                )}
                />
                {errors.userName && <View style={styles.messageContainer}><Text style={styles.messageError}>{errors.userName.message}</Text></View>}
-
-                <Controller 
+            <Controller 
                control={control}
                name="password"
                render={({field:{onChange, value}}) => (
@@ -94,15 +100,14 @@ export default function Login(){
                 />
               )}
               />
-              {errors.password && <View style={styles.messageContainer}><Text style={styles.messageError}>{errors.password.message}</Text></View>}
-               
-                
+              {errors.password && <View style={styles.messageContainer}><Text style={styles.messageError}>{errors.password.message}</Text></View>}                
                 <Button
-                    title="Login"
+                    title={ "Login"}
                     onPress={handleSubmit(handleLogin)}
                     backgroundColor={colors.mainButton}
                     textColor="#FFFFFF"
-                    style={{ marginTop: 30, width:"100%" }}
+                    style={{  width:"100%" }}
+                    disabled={isLoading}
                 />
                     </View>
                 </ScrollView>
@@ -146,7 +151,6 @@ const createStyles = (colors: any, fonts: any) => StyleSheet.create({
     scrollContent: {
         flexGrow: 1,
         paddingTop: 20,
-        paddingBottom: 50,
         paddingHorizontal: 30,
     },
     heading: {
@@ -154,12 +158,11 @@ const createStyles = (colors: any, fonts: any) => StyleSheet.create({
         fontFamily: fonts?.heading || 'System',
         fontSize: 26,
         fontWeight: 'bold',
-        marginBottom: 40,
+        marginBottom: 30,
         textAlign: 'center',
     },
     messageContainer:{
         width:"100%",
-        marginBottom: 10,
         alignSelf: 'center',
     },
     formLogin: {
@@ -171,10 +174,9 @@ const createStyles = (colors: any, fonts: any) => StyleSheet.create({
     messageError:{
         color:"red",
         fontSize: 12,
-        marginTop: 5,
-        paddingLeft: 5,
     },
     textInput: {
+        marginBottom: -10,
         width: '100%',
     }
 });
