@@ -1,12 +1,12 @@
 
 import { zodResolver } from '@hookform/resolvers/zod';
+import { Image } from "expo-image";
 import { Controller, useForm } from "react-hook-form";
-import { KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text, View } from "react-native";
+import { Dimensions, KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text, View } from "react-native";
 import { z } from "zod";
 import Button from "../components/button";
 
 
-import Logo from "../components/logo";
 import TextInput from "../components/TextInput";
 import { useLoading } from "../context/LoadingContext";
 import { useTheme } from "../context/ThemeContext";
@@ -37,34 +37,33 @@ export default function Login(){
 
     const handleLogin = async (data:FormData) => {
         showLoading();
-        console.log("---")
-        console.log(data.userName)
-        console.log(data.password)
-        console.log("---")
 
-        // // Simulate API call with 2 second delay
         setTimeout(() => {
             hideLoading();
             console.log('Login completed');
         }, 2000);
     };
 
-    return (
-        <KeyboardAvoidingView 
-            style={styles.container}
-            behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        >
-            <ScrollView 
-                contentContainerStyle={styles.scrollContainer}
-                keyboardShouldPersistTaps="handled"
-                showsVerticalScrollIndicator={true}
+    return (  
+        <View style={styles.container}>
+            <View style={styles.imageContainer}>
+                <Image source={require('../assets/images/masjid-jamik.png')} contentFit="cover" style={styles.heroImage}/>
+                <View style={styles.overlay} />
+            </View>
+            
+            <KeyboardAvoidingView 
+                style={styles.contentContainer}
+                behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
             >
-                <View style={styles.logoContainer}>
-                <Logo/>
-                <Text style={styles.heading}>Redagsi</Text>
-                </View>
-
-                <View style={styles.formLogin}>
+                <ScrollView 
+                    contentContainerStyle={styles.scrollContent}
+                    keyboardShouldPersistTaps="handled"
+                    showsVerticalScrollIndicator={false}
+                >
+                    <Text style={styles.heading}>Redagsi</Text>
+                    
+                    <View style={styles.formLogin}>
+                     
      
                <Controller 
                control={control}
@@ -75,6 +74,7 @@ export default function Login(){
                 placeholder="Username"
                 value={value}
                 onChangeText={onChange}
+                style={styles.textInput}
                 />
                )}
                />
@@ -90,6 +90,7 @@ export default function Login(){
                     value={value}
                     onChangeText={onChange}
                     secureTextEntry={true}
+                    style={styles.textInput}
                 />
               )}
               />
@@ -101,60 +102,80 @@ export default function Login(){
                     onPress={handleSubmit(handleLogin)}
                     backgroundColor={colors.mainButton}
                     textColor="#FFFFFF"
-                    style={{ marginTop: 30 }}
+                    style={{ marginTop: 30, width:"100%" }}
                 />
-                </View>
-            </ScrollView>
-        </KeyboardAvoidingView>
+                    </View>
+                </ScrollView>
+            </KeyboardAvoidingView>
+        </View>
     )
 }
 
+const { height: screenHeight } = Dimensions.get('window');
+
 const createStyles = (colors: any, fonts: any) => StyleSheet.create({
     container: {
+        flex: 1, 
+        backgroundColor: colors?.background || '#f0f0f0'
+    
+    },
+    imageContainer: {
+        height: screenHeight * 0.40,
+        width: '100%',
+    },
+    heroImage: {
+        width: '100%',
+        height: '100%',
+    },
+    overlay: {
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        backgroundColor: 'rgba(0, 0, 0, 0.3)',
+    },
+    contentContainer: {
         flex: 1,
-        backgroundColor: colors?.background || '#f9f9f9'
+        backgroundColor: colors?.background || '#f0f0f0',
+        
+        borderTopLeftRadius: 20,
+        borderTopRightRadius: 20,
+        marginTop: -20,
     },
-    logoContainer:{
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
-    scrollContainer: {
+    scrollContent: {
         flexGrow: 1,
-        justifyContent: 'center',
-        paddingVertical: 20,
-        paddingHorizontal: 20,
+        paddingTop: 20,
+        paddingBottom: 50,
+        paddingHorizontal: 30,
     },
     heading: {
-        color: colors?.text || '#1c1c1c',
+        color: '#333',
         fontFamily: fonts?.heading || 'System',
-        fontSize: 24,
-        marginBottom: 20,
-        marginTop: 12,
-    },
-    bodyText: {
-        color: colors?.text || '#1c1c1c',
-        fontFamily: fonts?.body || 'System',
-        fontSize: 16,
-        marginBottom: 10
-    },
-    timeText: {
-        color: colors?.text || '#1c1c1c',
-        fontFamily: fonts?.mono || 'System',
-        fontSize: 14,
-        marginTop: 20
+        fontSize: 26,
+        fontWeight: 'bold',
+        marginBottom: 40,
+        textAlign: 'center',
     },
     messageContainer:{
         width:"100%",
-        paddingHorizontal:20,
-       
+        marginBottom: 10,
+        alignSelf: 'center',
     },
-    formLogin:{
-        justifyContent:"center",
-        alignItems:"center",
+    formLogin: {
+      
+        width: '100%',
+        alignSelf: 'center',
+        gap: 20,
     },
     messageError:{
         color:"red",
-        
+        fontSize: 12,
+        marginTop: 5,
+        paddingLeft: 5,
+    },
+    textInput: {
+        width: '100%',
     }
 });
 
