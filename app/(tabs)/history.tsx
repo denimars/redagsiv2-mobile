@@ -11,7 +11,7 @@ const generateRandomTime = (startHour: number, endHour: number) => {
     return `${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}:00`;
 };
 
-const data = Array.from({ length: 30 }, (_, index) => {
+const data = Array.from({ length: 4 }, (_, index) => {
     const day = (index + 1).toString().padStart(2, '0');
     const arriveTime = generateRandomTime(8, 9); // 08:00 - 08:59
     const leaveTime = Math.random() > 0.1 ? generateRandomTime(14, 17) : "-"; // 14:00 - 16:59 atau "-"
@@ -70,7 +70,12 @@ export default function History(){
                                 <View style={styles.itemHeader}>
                                     <Text style={styles.itemNumber}>#{index + 1}</Text>
                                     <Text style={styles.itemDate}>
-                                        {new Date(item.arive).toLocaleDateString('id-ID')}
+                                        {new Date(item.arive).toLocaleDateString('id-ID', {
+                                            weekday: 'long',
+                                            day: 'numeric',
+                                            month: 'long',
+                                            year: 'numeric'
+                                        })}
                                     </Text>
                                 </View>
                                 
