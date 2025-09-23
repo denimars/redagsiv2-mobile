@@ -13,6 +13,8 @@ export const Colors = {
   card: '#ffffff',
   border: '#e5e5e5',
   secondary: '#6b7280',
+  tabBar: '#1B3C53',
+  tabBarInActive: '#ffffff',
 };
 
 export const Fonts = {
