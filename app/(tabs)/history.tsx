@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { FlatList, StyleSheet, Text, View } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import Button from "../../components/button";
 import DateTimePicker from "../../components/DateTimePicker";
 import { useTheme } from "../../context/ThemeContext";
@@ -37,11 +38,7 @@ export default function History(){
     }
     
     return(
-        <View style={styles.container}>
-            <View style={styles.header}>
-                <Text style={styles.title}>Filter Riwayat</Text>
-                <Text style={styles.subtitle}>Pilih rentang tanggal untuk melihat riwayat</Text>
-            </View>
+        <SafeAreaView style={styles.container}>
             
             <View style={styles.formContainer}>
                 <View style={styles.formCard}>
@@ -65,7 +62,6 @@ export default function History(){
             
             {showData && (
                 <View style={styles.dataContainer}>
-                    <Text style={styles.dataTitle}>Hasil Filter:</Text>
                     <FlatList
                         data={filteredData}
                         keyExtractor={(item, index) => index.toString()}
@@ -117,7 +113,7 @@ export default function History(){
                     />
                 </View>
             )}
-        </View>
+        </SafeAreaView>
     )
 }
 
@@ -126,7 +122,6 @@ const createStyles = (colors: any, fonts: any) => StyleSheet.create({
         flex: 1,
         backgroundColor: colors.background,
         paddingHorizontal: 20,
-        paddingTop: 40,
     },
     header: {
         marginBottom: 30,
@@ -174,13 +169,7 @@ const createStyles = (colors: any, fonts: any) => StyleSheet.create({
         marginTop: 20,
         flex: 1,
     },
-    dataTitle: {
-        fontSize: 18,
-        fontFamily: fonts.heading,
-        color: colors.text,
-        fontWeight: 'bold',
-        marginBottom: 15,
-    },
+  
     dataItem: {
         backgroundColor: colors.background || '#FFFFFF',
         padding: 16,
