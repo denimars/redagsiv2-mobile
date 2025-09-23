@@ -96,7 +96,7 @@ export default function Button({
 
 const styles = StyleSheet.create({
     button: {
-        width: '90%',
+        width: '100%',
         paddingVertical: 15,
         paddingHorizontal: 20,
         borderRadius: 8,
