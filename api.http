@@ -1,0 +1,6 @@
+@host = http://192.168.1.12:8080/api
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdXRob3JpemVkIjp0cnVlLCJleHAiOjE3NzI3MTgzMTksImlkIjoiODJiNTQwNjAtNjJiYy00NWFmLTk3N2EtOTgwZjQyZThiMzAzIn0.DRVm2OCMVe0LxDPiwhCQAs8kyiJHGKrZvNjvN1us6xE
+
+GET {{host}}/redagsi-mobile/attendace
+Authorization: Bearer {{token}}
+

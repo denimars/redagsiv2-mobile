@@ -1,38 +1,48 @@
+import api from "@/api/http";
+import { secureStorage } from "@/utils/secureStorage";
+import { useMutation } from "@tanstack/react-query";
 import { router } from "expo-router";
 import { useState } from "react";
 
-export const useLogin = ()=>{
-    const [isLoading, setIsLoading] = useState(false);
-    const [loginError, setLoginError] = useState<string| null>('');
+export const useLogin = () => {
+  const [message, setMessage] = useState<string | null>(null);
+  const { mutate, isPending, isError, isSuccess } = useMutation({
+    mutationFn: async (data: {
+      username: string;
+      password: string;
+      system: string;
+    }) => {
+      const response = await api.post(`/redagsi-mobile/auth`, data);
+      if (response.status === 200) {
+        return response.data;
+      }
+      return undefined;
+    },
+    onSuccess: (res) => {
+      console.log("Login Berhasil");
+      secureStorage.setToken(res.token);
+      secureStorage.setUserData({ name: res.name, user: res.user });
+      router.replace("/(tabs)");
+    },
+    onError: (err) => {
+      setMessage("Username atau password salah");
+      console.log("Login Gagal", err);
+    },
+  });
 
-    const login = async(userName: string, password: string) =>{
-        setIsLoading(true);
-        setLoginError(null);
-        try{
-            //simulate api call delay
-            await new Promise((resolve) => setTimeout(resolve, 500));
-            if (userName==='admin' && password==='123456'){
-                console.log("Login Berhasil");
-                router.replace("/(tabs)");
-            }else{
-                setLoginError("Username atau password salah")
-            }
+  const login = (data: { username: string; password: string }) => {
+    mutate({
+      username: data.username,
+      password: data.password,
+      system: "redagsi",
+    });
+  };
 
-        }catch(error){
-            setLoginError("Terjadi kesalahan")
-        }finally{
-            setIsLoading(false)
-        }
-
-    };
-    const clearError = ()=>{
-        setLoginError(null)
-    }
-        
-    return{
-        login,
-        isLoading,
-        loginError,
-        clearError
-    }
-}
+  return {
+    login,
+    isPending,
+    isError,
+    message,
+    isSuccess,
+  };
+};
