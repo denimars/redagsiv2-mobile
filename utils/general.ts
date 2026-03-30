@@ -8,6 +8,7 @@ export const getGreeting = (currentTime: Date) => {
 
 export const capitalizeWords = (text: string) =>
   text.toLowerCase().replace(/\b\w/g, (char) => char.toUpperCase());
+
 export const formatCurrency = (amount: number | undefined) => {
   if (amount === undefined) return "RP 0";
   return new Intl.NumberFormat("id-ID", {

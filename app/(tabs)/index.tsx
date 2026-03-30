@@ -1,7 +1,6 @@
 import useGetAttendanceSchedule from "@/hooks/get/use-get-attendance-schedule";
 import { formatLocalizedDate } from "@/utils/time";
 import { Ionicons } from "@expo/vector-icons";
-import { useRouter } from "expo-router";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import {
   Animated,
@@ -49,7 +48,6 @@ const ANNOUNCEMENT_DATA = [
 
 export default function Absensi() {
   const { colors, fonts } = useTheme();
-  const router = useRouter();
   const [currentTime, setCurrentTime] = useState(new Date());
   const styles = createStyles(colors, fonts);
   const [refreshing, setRefreshing] = useState(false);
@@ -265,10 +263,7 @@ export default function Absensi() {
                   {capitalizeWords(userData?.name || "")}
                 </Text>
               </View>
-              <TouchableOpacity
-                style={styles.notificationButton}
-                onPress={() => router.push("/notification")}
-              >
+              <TouchableOpacity style={styles.notificationButton}>
                 <Ionicons
                   name={isInRange ? "notifications-outline" : "warning-outline"}
                   size={24}

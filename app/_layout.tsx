@@ -80,6 +80,10 @@ export default function RootLayout() {
             <Stack.Screen name="login" />
             <Stack.Screen name="change-password" />
             <Stack.Screen name="settings" />
+            <Stack.Screen name="salary" />
+            <Stack.Screen name="health" />
+            <Stack.Screen name="loan" />
+            <Stack.Screen name="loan-application" />
           </Stack>
           <LoadingOverlay />
         </LoadingProvider>
