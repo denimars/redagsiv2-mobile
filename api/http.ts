@@ -3,7 +3,8 @@ import { router } from "expo-router";
 import { secureStorage } from "../utils/secureStorage";
 
 const api = axios.create({
-  baseURL: "http://192.168.1.13:8080/api",
+  baseURL: "https://api-sipahamv21.ponpesabuhurairah.id/api",
+  // baseURL: "http://192.168.1.13:8080/api",
   // baseURL: "http://10.197.226.34:8080/api",
   timeout: 15000,
 });
