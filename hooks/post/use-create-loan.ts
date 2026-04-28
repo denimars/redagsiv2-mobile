@@ -1,6 +1,13 @@
 import api from "@/api/http";
-import { LoanFormData } from "@/schema/loan";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+
+type LoanFormData = {
+  amount: number;
+  deducation_amount: number;
+  description: string;
+  duration_month: number;
+  type: number;
+};
 
 export default function useCreateLoan(
   onSuccess: () => void,

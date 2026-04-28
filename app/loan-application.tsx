@@ -1,7 +1,9 @@
 import Dropdownv2 from "@/components/Dropdownv2";
+import InputCurrency from "@/components/InputCurrency";
 import useGetLoanType from "@/hooks/get/use-get-loan-type";
 import useCreateLoan from "@/hooks/post/use-create-loan";
 import { LoanFormData, loanSchema } from "@/schema/loan";
+import Format from "@/utils/Format";
 import { Ionicons } from "@expo/vector-icons";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "expo-router";
@@ -39,9 +41,9 @@ export default function LoanForm() {
     resolver: zodResolver(loanSchema),
     defaultValues: {
       description: "",
-      amount: 0,
+      amount: "0",
       duration_month: 0,
-      deducation_amount: 0,
+      deducation_amount: "0",
       type: 1,
     },
   });
@@ -66,8 +68,20 @@ export default function LoanForm() {
     return () => hideLoading();
   }, [hideLoading, isPending, showLoading]);
 
+  const middleware = (data: LoanFormData) => {
+    const amount = Format.parseRupiah(data.amount);
+    const deducation_amount = Format.parseRupiah(data.deducation_amount);
+    return {
+      ...data,
+      amount,
+      deducation_amount,
+    };
+  };
+
   const onSubmit = async (data: LoanFormData) => {
-    handleSave(data);
+    const middlewareData = middleware(data);
+    console.log(middlewareData);
+    handleSave(middlewareData);
   };
 
   return (
@@ -125,11 +139,11 @@ export default function LoanForm() {
                   control={control}
                   name="amount"
                   render={({ field: { onChange, value } }) => (
-                    <TextInput
+                    <InputCurrency
                       label="Jumlah Pinjaman (Rp)"
                       placeholder="Masukkan jumlah pinjaman"
                       value={value ? value.toString() : ""}
-                      onChangeText={(text) => onChange(Number(text))}
+                      onChangeText={(text) => onChange(text)}
                       keyboardType="numeric"
                       style={styles.textInput}
                     />
@@ -163,11 +177,11 @@ export default function LoanForm() {
                   control={control}
                   name="deducation_amount"
                   render={({ field: { onChange, value } }) => (
-                    <TextInput
+                    <InputCurrency
                       label="Jumlah Potongan (Rp)"
                       placeholder="Masukkan jumlah potongan"
                       value={value ? value.toString() : ""}
-                      onChangeText={(text) => onChange(Number(text))}
+                      onChangeText={(text) => onChange(text)}
                       keyboardType="numeric"
                       style={styles.textInput}
                     />
