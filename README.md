@@ -1,50 +1,58 @@
-# Welcome to your Expo app 👋
+# Redagsi Mobile 📱
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+**Redagsi Mobile** adalah aplikasi mobile berbasis **React Native** yang dikembangkan menggunakan framework **Expo**. Aplikasi ini dirancang sebagai solusi manajemen karyawan terintegrasi, dengan fokus pada transparansi layanan finansial, administrasi personal, dan efisiensi operasional.
 
-## Get started
+## ✨ Fitur Utama
 
-1. Install dependencies
+- **Layanan Finansial Lengkap**:
+  - **Salary (Gaji)**: Akses detail slip gaji dan rincian penggajian secara real-time.
+  - **Loan (Pinjaman)**: Sistem pengajuan pinjaman digital yang mudah dan pemantauan riwayat pinjaman.
+- **Manajemen Personal**:
+  - Autentikasi aman dan fitur keamanan seperti ganti password.
+  - Pengaturan profil pengguna yang komprehensif.
+- **Pelacakan Aktivitas & Kesehatan**:
+  - Integrasi QR Code untuk identifikasi atau absensi.
+  - Modul **Health** untuk pemantauan kesehatan karyawan.
+  - Riwayat aktivitas yang tercatat dengan rapi.
+- **Teknologi Cerdas**:
+  - Fitur berbasis lokasi (GPS) untuk validasi aktivitas.
+  - Push notification untuk pembaruan status penting secara instan.
 
+## 🌟 Harapan dari Project Ini
+
+Melalui pengembangan **Redagsi Mobile**, terdapat beberapa tujuan utama yang diharapkan dapat tercapai:
+
+1. **Efisiensi Administrasi**: Mengurangi proses manual dan dokumen fisik dalam pengajuan pinjaman dan administrasi personal.
+2. **Transparansi Maksimal**: Memberikan kejelasan penuh kepada karyawan mengenai hak finansial mereka (gaji dan pinjaman) secara terbuka.
+3. **Aksesibilitas User-Friendly**: Memudahkan karyawan mengakses layanan perusahaan di mana saja dan kapan saja langsung dari smartphone mereka.
+4. **Keamanan Data**: Menjamin integritas dan kerahasiaan data pribadi serta transaksi finansial karyawan melalui enkripsi dan praktik keamanan terbaik.
+5. **Skalabilitas Masa Depan**: Membangun fondasi kode yang solid dengan teknologi modern sehingga aplikasi mudah dikembangkan dengan fitur-fitur baru di masa mendatang.
+
+## 🛠️ Teknologi yang Digunakan
+
+- **Core**: React Native & Expo SDK (Expo Router).
+- **State Management**: @tanstack/react-query (TanStack Query).
+- **Communication**: Axios (API Client).
+- **Validation**: Zod & React Hook Form.
+- **UI/UX**: Custom components dengan Google Fonts (Outfit).
+- **Storage**: Expo Secure Store & AsyncStorage.
+
+## 🚀 Memulai (Getting Started)
+
+1. **Instalasi Dependensi**:
    ```bash
    npm install
    ```
 
-2. Start the app
-
+2. **Jalankan Aplikasi**:
    ```bash
    npx expo start
    ```
 
-In the output, you'll find options to open the app in a
+3. **Buka di Emulator/Device**:
+   - Tekan `a` untuk Android.
+   - Tekan `i` untuk iOS.
+   - Gunakan aplikasi **Expo Go** untuk menjalankannya langsung di smartphone fisik.
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
-
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
-
-```bash
-npm run reset-project
-```
-
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
-
-## Learn more
-
-To learn more about developing your project with Expo, look at the following resources:
-
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
-
-## Join the community
-
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+---
+Dikembangkan dengan ❤️ untuk kemudahan manajemen karyawan.

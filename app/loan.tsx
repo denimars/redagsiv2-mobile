@@ -30,6 +30,7 @@ export default function LoanList() {
   const renderStatus = (
     is_approved: boolean | null,
     is_paid_off: boolean | null,
+    is_disbursement: boolean | null,
   ) => {
     if (is_paid_off) {
       return (
@@ -47,11 +48,21 @@ export default function LoanList() {
       );
     }
 
-    if (is_approved) {
+    if (is_approved && !is_disbursement) {
       return (
         <View style={[styles.statusBadge, { backgroundColor: "#E3F2FD" }]}>
           <Text style={[styles.statusText, { color: "#1976D2" }]}>
             Disetujui
+          </Text>
+        </View>
+      );
+    }
+
+    if (is_disbursement) {
+      return (
+        <View style={[styles.statusBadge, { backgroundColor: "#E3F2FD" }]}>
+          <Text style={[styles.statusText, { color: "#1976D2" }]}>
+            Dicairkan
           </Text>
         </View>
       );
@@ -73,7 +84,7 @@ export default function LoanList() {
         <View style={styles.headerInfo}>
           <Text style={styles.loanDescription}>{item.description}</Text>
         </View>
-        {renderStatus(item.is_approved, item.is_paid_off)}
+        {renderStatus(item.is_approved, item.is_paid_off, item.is_disbursement)}
       </View>
 
       <View style={styles.cardBody}>

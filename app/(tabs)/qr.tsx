@@ -22,8 +22,7 @@ export default function QR() {
     <SafeAreaView style={styles.safeArea}>
       <ScrollView showsVerticalScrollIndicator={false}>
         <View style={styles.header}>
-          <Text style={styles.title}>QR Code</Text>
-          <Text style={styles.subtitle}>Tunjukkan kode ini untuk absensi</Text>
+          <Text style={styles.title}>ID PTK</Text>
         </View>
 
         <View style={styles.qrContainer}>
@@ -32,10 +31,7 @@ export default function QR() {
               <View style={styles.logoContainer}>
                 <Ionicons name="qr-code" size={30} color={colors.mainButton} />
               </View>
-              <Text style={styles.cardTitle}>Kode Absensi</Text>
-              <Text style={styles.cardSubtitle}>
-                Scan untuk melakukan absensi harian
-              </Text>
+              <Text style={styles.cardTitle}>QR</Text>
             </View>
 
             <View style={styles.qrWrapper}>

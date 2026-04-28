@@ -12,6 +12,7 @@ export interface LoanItem {
   is_paid_off: boolean | null;
   queue: number;
   is_approved: boolean | null;
+  is_disbursement: boolean | null;
 }
 
 export default function useGetLoan(type: number) {

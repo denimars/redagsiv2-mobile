@@ -76,7 +76,7 @@ export default function Profile() {
                   />
                 </View>
                 <View style={styles.tupasInfo}>
-                  <Text style={styles.profileLabel}>TUPAS POKOK</Text>
+                  <Text style={styles.profileLabel}>TUGAS POKOK</Text>
                   <Text style={styles.profileTupas}>TIM IT</Text>
                 </View>
               </View>
