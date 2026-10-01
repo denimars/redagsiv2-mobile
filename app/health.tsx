@@ -6,6 +6,7 @@ import { useRouter } from "expo-router";
 import { useEffect } from "react";
 import { Controller, useForm } from "react-hook-form";
 import {
+  Alert,
   KeyboardAvoidingView,
   Platform,
   ScrollView,
@@ -43,9 +44,11 @@ export default function HealthForm() {
       hideLoading();
       reset();
       router.back();
+      Alert.alert("Sukses", "Data berhasil disimpan.");
     },
     () => {
       hideLoading();
+      Alert.alert("Gagal", "Data gagal disimpan.");
     },
   );
 

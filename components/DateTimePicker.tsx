@@ -2,21 +2,33 @@ import { Ionicons } from "@expo/vector-icons";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import { useTheme } from "../context/ThemeContext";
-import { useDatePicker } from "../hooks/useDatePicker";
+import { formatIndonesianDate, useDatePicker } from "../hooks/useDatePicker";
 
 interface DateTimePickerProps {
   label: string;
+  value?: string | Date;
   onDateChange?: (date: Date) => void;
+  error?: string;
 }
 
 export default function DateTimePicker({
   label,
+  value,
   onDateChange,
+  error,
 }: DateTimePickerProps) {
   const { colors, fonts } = useTheme();
   const styles = createStyles(colors, fonts);
-  const { date_, handleData, isDataPickerVisible, setIsDataPickerVisible } =
-    useDatePicker(onDateChange || (() => {}));
+  const { handleData, isDataPickerVisible, setIsDataPickerVisible } =
+    useDatePicker(onDateChange);
+
+  let displayDate = "";
+  if (value) {
+    const d = new Date(value);
+    if (!isNaN(d.getTime())) {
+      displayDate = formatIndonesianDate(d);
+    }
+  }
 
   return (
     <View style={styles.container}>
@@ -24,9 +36,12 @@ export default function DateTimePicker({
       <TouchableOpacity
         activeOpacity={0.7}
         onPress={() => setIsDataPickerVisible(true)}
-        style={styles.inputContainer}
+        style={[
+          styles.inputContainer,
+          error ? { borderColor: "#EF4444" } : {},
+        ]}
       >
-        <Text style={styles.dateText}>{date_ || "Pilih Tanggal"}</Text>
+        <Text style={styles.dateText}>{displayDate || "Pilih Tanggal"}</Text>
         <View style={styles.iconContainer}>
           <Ionicons
             name="calendar-outline"
@@ -35,7 +50,11 @@ export default function DateTimePicker({
           />
         </View>
       </TouchableOpacity>
+
+      {error && <Text style={styles.errorText}>{error}</Text>}
+
       <DateTimePickerModal
+        date={value ? new Date(value) : new Date()}
         isVisible={isDataPickerVisible}
         mode="date"
         onConfirm={handleData}
@@ -77,5 +96,11 @@ const createStyles = (colors: any, fonts: any) =>
     },
     iconContainer: {
       marginLeft: 10,
+    },
+    errorText: {
+      color: "#EF4444",
+      fontSize: 12,
+      marginTop: 4,
+      fontFamily: fonts.body,
     },
   });

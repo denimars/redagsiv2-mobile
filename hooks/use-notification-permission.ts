@@ -1,26 +1,33 @@
-import * as Notifications from "expo-notifications";
+/* eslint-disable @typescript-eslint/no-require-imports */
+import Constants from "expo-constants";
 import { useCallback, useEffect, useState } from "react";
 import { AppState, Linking, Platform } from "react-native";
 
+const isExpoGo = Constants.executionEnvironment === "storeClient";
+
+type NotificationPermissionStatus = "undetermined" | "granted" | "denied";
+
 export function useNotificationPermission() {
   const [notificationStatus, setNotificationStatus] =
-    useState<Notifications.PermissionStatus>(
-      Notifications.PermissionStatus.UNDETERMINED,
-    );
+    useState<NotificationPermissionStatus>("undetermined");
 
   /**
    * Cek permission saat ini
    */
   const checkPermission = useCallback(async () => {
+    if (isExpoGo) return "undetermined" as NotificationPermissionStatus;
+    const Notifications = require("expo-notifications");
     const { status } = await Notifications.getPermissionsAsync();
     setNotificationStatus(status);
-    return status;
+    return status as NotificationPermissionStatus;
   }, []);
 
   /**
    * Request permission (Android 13+ ready)
    */
   const requestPermission = useCallback(async () => {
+    if (isExpoGo) return "undetermined" as NotificationPermissionStatus;
+    const Notifications = require("expo-notifications");
     const { status } = await Notifications.requestPermissionsAsync({
       android: {
         allowAlert: true,
@@ -30,7 +37,7 @@ export function useNotificationPermission() {
     });
 
     setNotificationStatus(status);
-    return status;
+    return status as NotificationPermissionStatus;
   }, []);
 
   /**
@@ -49,7 +56,7 @@ export function useNotificationPermission() {
    */
   const handleToggleNotification = useCallback(async () => {
     // Sudah diizinkan → buka settings
-    if (notificationStatus === Notifications.PermissionStatus.GRANTED) {
+    if (notificationStatus === "granted") {
       openSettings();
       return;
     }
@@ -58,7 +65,7 @@ export function useNotificationPermission() {
     const status = await requestPermission();
 
     // Ditolak / blocked → buka settings
-    if (status !== Notifications.PermissionStatus.GRANTED) {
+    if (status !== "granted") {
       openSettings();
     }
   }, [notificationStatus, requestPermission, openSettings]);
@@ -70,6 +77,11 @@ export function useNotificationPermission() {
     let mounted = true;
 
     const init = async () => {
+      if (isExpoGo) {
+        if (mounted) setNotificationStatus("undetermined");
+        return;
+      }
+      const Notifications = require("expo-notifications");
       const { status } = await Notifications.getPermissionsAsync();
       if (mounted) setNotificationStatus(status);
     };
@@ -90,8 +102,9 @@ export function useNotificationPermission() {
 
   return {
     notificationStatus,
-    isGranted: notificationStatus === Notifications.PermissionStatus.GRANTED,
-    isDenied: notificationStatus === Notifications.PermissionStatus.DENIED,
+    isSupported: !isExpoGo,
+    isGranted: notificationStatus === "granted",
+    isDenied: notificationStatus === "denied",
 
     checkPermission,
     handleToggleNotification,

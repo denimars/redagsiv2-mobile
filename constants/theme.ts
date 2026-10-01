@@ -20,7 +20,7 @@ export const LightThemes = {
   },
   dark: {
     text: "#f9f9f9",
-    textSecondary: "#1c1c1c",
+    textSecondary: "#d1d5db",
     background: "#121212",
     mainButton: "#c8a75a",
     icon: "#c8a75a",

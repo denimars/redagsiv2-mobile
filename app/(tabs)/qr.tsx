@@ -1,4 +1,5 @@
 import { useTheme } from "@/context/ThemeContext";
+import useGetProfile from "@/hooks/get/use-get-profile";
 import { Ionicons } from "@expo/vector-icons";
 import {
   ScrollView,
@@ -14,6 +15,12 @@ export default function QR() {
   const { colors, fonts } = useTheme();
   const { width } = useWindowDimensions();
   const styles = createStyles(colors, fonts);
+  const { EmployeeMobile } = useGetProfile();
+
+  const employeeId =
+    EmployeeMobile?.employee_hub?.employee?.id ||
+    EmployeeMobile?.employee_hub?.employee?.nupy ||
+    "";
 
   // Calculate QR size based on screen width but cap it for larger screens
   const qrSize = Math.min(width * 0.5, 200);
@@ -36,7 +43,7 @@ export default function QR() {
 
             <View style={styles.qrWrapper}>
               <QRCode
-                value="19912010010101"
+                value={employeeId || "no-id"}
                 size={qrSize}
                 color={colors.mainButton}
                 backgroundColor="#FFFFFF"
@@ -46,7 +53,7 @@ export default function QR() {
             <View style={styles.qrFooter}>
               <View style={styles.idContainer}>
                 <Text style={styles.idLabel}>ID PEGAWAI</Text>
-                <Text style={styles.idValue}>19912010010101</Text>
+                <Text style={styles.idValue}>{employeeId || "-"}</Text>
               </View>
               <View style={styles.statusBadge}>
                 <View style={styles.statusDot} />

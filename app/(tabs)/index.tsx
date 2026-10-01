@@ -51,10 +51,9 @@ export default function Absensi() {
   const [currentTime, setCurrentTime] = useState(new Date());
   const styles = createStyles(colors, fonts);
   const [refreshing, setRefreshing] = useState(false);
-  const [isInRange, setIsInRange] = useState(false);
 
   // Animation values
-  const pulseAnim = useRef(new Animated.Value(1)).current;
+  const [pulseAnim] = useState(() => new Animated.Value(1));
   const announcementScrollRef = useRef<ScrollView>(null);
   const announcementIndex = useRef(0);
 
@@ -115,7 +114,10 @@ export default function Absensi() {
     AttendanceSchedule,
     isLoading: isScheduleLoading,
     refetch,
+    error,
   } = useGetAttendanceSchedule();
+
+  // console.log(error);
 
   const { location, state } = useGetLocation(refreshing);
 
@@ -129,25 +131,23 @@ export default function Absensi() {
     setRefreshing(false);
   }, [refetch]);
 
-  const { saveAttendance } = useCreateAttendance();
+  const { saveAttendance, isPending: isAbsenPending } = useCreateAttendance();
 
-  const isLoading = isScheduleLoading || !location || !AttendanceSchedule;
+  const isLoading =
+    (isScheduleLoading || !location || !AttendanceSchedule) && !error;
 
-  useEffect(() => {
-    const distance = convertLatLongToKm(
-      location?.coords.latitude || 0,
-      location?.coords.longitude || 0,
-      AttendanceSchedule?.location.lat || 0,
-      AttendanceSchedule?.location.long || 0,
-    );
-    setIsInRange(distance <= (AttendanceSchedule?.location.radius || 0));
-  }, [
-    AttendanceSchedule?.location.radius,
-    AttendanceSchedule?.location.lat,
-    AttendanceSchedule?.location.long,
-    location?.coords.latitude,
-    location?.coords.longitude,
-  ]);
+  const distanceToLocation = location?.coords
+      ? convertLatLongToKm(
+          location.coords.latitude,
+          location.coords.longitude,
+          AttendanceSchedule?.location?.lat || 0,
+          AttendanceSchedule?.location?.long || 0,
+        )
+      : null;
+
+  const isInRange =
+    distanceToLocation !== null &&
+    distanceToLocation <= (AttendanceSchedule?.location?.radius || 0) / 1000;
 
   const { userData } = useGetUserStorage();
 
@@ -166,38 +166,22 @@ export default function Absensi() {
     }
 
     if (start) {
-      if (total_attendance === 0) {
-        return {
-          text: "Absen Masuk",
-          status: true,
-          absensi: false,
-        };
-      } else {
-        return {
-          text: "Absen Masuk",
-          status: true,
-          absensi: true,
-        };
-      }
+      return {
+        text: "Absen Masuk",
+        status: true,
+        absensi: false,
+      };
     }
 
     if (end) {
-      if (total_attendance <= 1) {
-        return {
-          text: "Absen Keluar",
-          status: true,
-          absensi: false,
-        };
-      } else {
-        return {
-          text: "Absen Keluar",
-          status: true,
-          absensi: true,
-        };
-      }
+      return {
+        text: "Absen Keluar",
+        status: true,
+        absensi: false,
+      };
     }
 
-    if ((!start && !end && total_attendance) || 0 > 0) {
+    if (total_attendance > 0) {
       return {
         text: "",
         status: false,
@@ -265,62 +249,101 @@ export default function Absensi() {
               </View>
               <TouchableOpacity style={styles.notificationButton}>
                 <Ionicons
-                  name={isInRange ? "notifications-outline" : "warning-outline"}
+                  name={
+                    AttendanceSchedule?.in && !isInRange
+                      ? "warning-outline"
+                      : "notifications-outline"
+                  }
                   size={24}
-                  color={isInRange ? colors.text : "#EF4444"}
+                  color={
+                    AttendanceSchedule?.in && !isInRange
+                      ? "#EF4444"
+                      : colors.text
+                  }
                 />
-                {isInRange && <View style={styles.notificationBadge} />}
+                {AttendanceSchedule?.in && isInRange && (
+                  <View style={styles.notificationBadge} />
+                )}
               </TouchableOpacity>
             </View>
 
             {/* Clock Section */}
-            <View style={styles.clockSection}>
-              <View style={styles.clockCard}>
-                <Text style={styles.dateLabel}>
-                  {formatLocalizedDate(currentTime, "dddd, D MMMM YYYY")}
+            {error ? (
+              <View style={styles.errorCard}>
+                <View
+                  style={[
+                    styles.alertIconContainer,
+                    { marginRight: 0, backgroundColor: "#FEF2F2" },
+                  ]}
+                >
+                  <Ionicons
+                    name="cloud-offline-outline"
+                    size={32}
+                    color="#EF4444"
+                  />
+                </View>
+                <Text style={styles.errorText}>Gagal Memuat Jadwal</Text>
+                <Text style={styles.errorSubtext}>
+                  Terjadi kesalahan saat mengambil data jadwal absensi. Silakan
+                  periksa koneksi internet Anda atau coba lagi.
                 </Text>
-                <View style={styles.clockWrapper}>
-                  <Animated.View
-                    style={[
-                      styles.clockCircle,
-                      {
-                        transform: [{ scale: pulseAnim }],
-                      },
-                    ]}
-                  >
-                    <Text style={styles.timeText}>
-                      {formatLocalizedDate(currentTime, "HH:mm:ss")}
-                    </Text>
-                    {AttendanceSchedule?.in && (
-                      <View style={styles.statusBadge}>
-                        <View
-                          style={[
-                            styles.statusDot,
-                            {
-                              backgroundColor: showAbsensi().absensi
-                                ? "#10B981"
-                                : isInRange
-                                  ? "#FBBF24"
-                                  : "#EF4444",
-                            },
-                          ]}
-                        />
-                        <Text style={styles.statusText}>
-                          {showAbsensi().absensi
-                            ? "Sudah Absen"
-                            : isInRange
-                              ? "Belum Absen"
-                              : "Luar Area"}
-                        </Text>
-                      </View>
-                    )}
-                  </Animated.View>
+                <TouchableOpacity
+                  style={styles.retryButton}
+                  onPress={() => refetch()}
+                >
+                  <Ionicons name="refresh-outline" size={20} color="#fff" />
+                  <Text style={styles.retryButtonText}>Coba Lagi</Text>
+                </TouchableOpacity>
+              </View>
+            ) : (
+              <View style={styles.clockSection}>
+                <View style={styles.clockCard}>
+                  <Text style={styles.dateLabel}>
+                    {formatLocalizedDate(currentTime, "dddd, D MMMM YYYY")}
+                  </Text>
+                  <View style={styles.clockWrapper}>
+                    <Animated.View
+                      style={[
+                        styles.clockCircle,
+                        {
+                          transform: [{ scale: pulseAnim }],
+                        },
+                      ]}
+                    >
+                      <Text style={styles.timeText}>
+                        {formatLocalizedDate(currentTime, "HH:mm:ss")}
+                      </Text>
+                      {AttendanceSchedule?.in && (
+                        <View style={styles.statusBadge}>
+                          <View
+                            style={[
+                              styles.statusDot,
+                              {
+                                backgroundColor: showAbsensi().absensi
+                                  ? "#10B981"
+                                  : isInRange
+                                    ? "#FBBF24"
+                                    : "#EF4444",
+                              },
+                            ]}
+                          />
+                          <Text style={styles.statusText}>
+                            {showAbsensi().absensi
+                              ? "Sudah Absen"
+                              : isInRange
+                                ? "Belum Absen"
+                                : "Luar Area"}
+                          </Text>
+                        </View>
+                      )}
+                    </Animated.View>
+                  </View>
                 </View>
               </View>
-            </View>
+            )}
 
             {/* Geofencing Alert */}
-            {!isInRange && (
+            {AttendanceSchedule?.in && !isInRange && !error && (
               <View style={styles.alertBanner}>
                 <View style={styles.alertIconContainer}>
                   <Ionicons name="location-outline" size={24} color="#EF4444" />
@@ -343,6 +366,7 @@ export default function Absensi() {
                     styles.dynamicButton,
                     showAbsensi().absensi && { backgroundColor: "#10B981" },
                   ]}
+                  disabled={isAbsenPending || showAbsensi().absensi}
                   onPress={() => {
                     saveAttendance({
                       lat: location?.coords.latitude || 0,
@@ -712,5 +736,57 @@ const createStyles = (colors: any, fonts: any) =>
       color: colors?.text || "#1c1c1c",
       marginBottom: 12,
       marginLeft: 4,
+    },
+    errorCard: {
+      backgroundColor: colors?.card || "#fff",
+      borderRadius: 28,
+      padding: 30,
+      alignItems: "center",
+      justifyContent: "center",
+      borderWidth: 1,
+      borderColor: "#FEE2E2",
+      shadowColor: "#EF4444",
+      shadowOffset: { width: 0, height: 10 },
+      shadowOpacity: 0.1,
+      shadowRadius: 20,
+      elevation: 5,
+      marginBottom: 30,
+    },
+    errorText: {
+      fontFamily: fonts?.heading || "System",
+      fontSize: 18,
+      fontWeight: "bold",
+      color: "#EF4444",
+      marginTop: 16,
+      marginBottom: 8,
+    },
+    errorSubtext: {
+      fontFamily: fonts?.body || "System",
+      fontSize: 14,
+      color: colors?.secondary || "#6b7280",
+      textAlign: "center",
+      marginBottom: 24,
+      lineHeight: 20,
+      opacity: 0.8,
+    },
+    retryButton: {
+      backgroundColor: colors?.mainButton,
+      paddingHorizontal: 24,
+      paddingVertical: 12,
+      borderRadius: 14,
+      flexDirection: "row",
+      alignItems: "center",
+      shadowColor: colors?.mainButton,
+      shadowOffset: { width: 0, height: 4 },
+      shadowOpacity: 0.3,
+      shadowRadius: 8,
+      elevation: 4,
+    },
+    retryButtonText: {
+      fontFamily: fonts?.heading || "System",
+      fontSize: 14,
+      fontWeight: "bold",
+      color: "#fff",
+      marginLeft: 8,
     },
   });

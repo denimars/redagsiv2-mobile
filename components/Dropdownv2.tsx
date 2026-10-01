@@ -22,6 +22,7 @@ export interface DropdownProps {
   selectedValue: string | number;
   onValueChange: (value: string | number) => void;
   placeholder?: string;
+  error?: string;
 }
 
 export default function Dropdownv2({
@@ -30,6 +31,7 @@ export default function Dropdownv2({
   selectedValue,
   onValueChange,
   placeholder = "Select an option",
+  error,
 }: DropdownProps) {
   const { colors, fonts } = useTheme();
   const [modalVisible, setModalVisible] = useState(false);
@@ -49,7 +51,10 @@ export default function Dropdownv2({
     <View style={styles.container}>
       {label && <Text style={styles.label}>{label}</Text>}
       <TouchableOpacity
-        style={styles.dropdownButton}
+        style={[
+          styles.dropdownButton,
+          error ? { borderBottomColor: "#EF4444" } : {},
+        ]}
         onPress={toggleModal}
         activeOpacity={0.7}
       >
@@ -67,6 +72,8 @@ export default function Dropdownv2({
           color={colors.text}
         />
       </TouchableOpacity>
+
+      {error && <Text style={styles.errorText}>{error}</Text>}
 
       <Modal
         visible={modalVisible}
@@ -141,6 +148,12 @@ const createStyles = (colors: any, fonts: any) =>
       fontSize: 16,
       fontFamily: fonts.body,
       color: colors.text,
+    },
+    errorText: {
+      color: "#EF4444",
+      fontSize: 12,
+      marginTop: 4,
+      fontFamily: fonts.body,
     },
     modalOverlay: {
       flex: 1,

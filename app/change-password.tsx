@@ -1,8 +1,10 @@
 import { Ionicons } from "@expo/vector-icons";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "expo-router";
+import { useEffect } from "react";
 import { Controller, useForm } from "react-hook-form";
 import {
+  Alert,
   KeyboardAvoidingView,
   Platform,
   ScrollView,
@@ -17,14 +19,15 @@ import Button from "../components/button";
 import TextInput from "../components/TextInput";
 import { useLoading } from "../context/LoadingContext";
 import { useTheme } from "../context/ThemeContext";
+import useUpdatePassword from "../hooks/update/use-update-password";
 
 const changePasswordSchema = z
   .object({
-    currentPassword: z.string().min(1, "Password saat ini wajib diisi"),
+    currentPassword: z.string().min(7, "Password saat ini minimal 7 karakter"),
     newPassword: z
       .string()
       .min(1, "Password baru wajib diisi")
-      .min(6, "Password minimal 6 karakter"),
+      .min(7, "Password baru minimal 7 karakter"),
     confirmPassword: z.string().min(1, "Konfirmasi password wajib diisi"),
   })
   .refine((data) => data.newPassword === data.confirmPassword, {
@@ -53,19 +56,32 @@ export default function ChangePassword() {
     },
   });
 
-  const handleSave = async (data: FormData) => {
-    showLoading();
-    try {
-      // TODO: Implement API call to change password
-      console.log("Changing password...", data);
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1500));
+  const { updatePassword, isPending } = useUpdatePassword(
+    () => {
+      hideLoading();
+      Alert.alert("Sukses", "Password berhasil diubah.");
       router.back();
-    } catch (error) {
-      console.error("Change password error:", error);
-    } finally {
+    },
+    () => {
+      hideLoading();
+      Alert.alert("Gagal", "Gagal mengubah password. Silakan coba lagi.");
+    },
+  );
+
+  useEffect(() => {
+    if (isPending) {
+      showLoading();
+    } else {
       hideLoading();
     }
+    return () => hideLoading();
+  }, [hideLoading, isPending, showLoading]);
+
+  const handleSave = (data: FormData) => {
+    updatePassword({
+      old_password: data.currentPassword,
+      new_password: data.newPassword,
+    });
   };
 
   return (

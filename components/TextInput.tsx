@@ -8,6 +8,7 @@ import {
   TouchableOpacity,
   View,
   ViewStyle,
+  StyleProp,
 } from "react-native";
 import { useTheme } from "../context/ThemeContext";
 
@@ -19,10 +20,11 @@ interface TextInputProps {
   secureTextEntry?: boolean;
   keyboardType?: "default" | "email-address" | "numeric" | "phone-pad";
   autoCapitalize?: "none" | "sentences" | "words" | "characters";
-  style?: ViewStyle;
-  inputStyle?: TextStyle;
-  labelStyle?: TextStyle;
+  style?: StyleProp<ViewStyle>;
+  inputStyle?: StyleProp<TextStyle>;
+  labelStyle?: StyleProp<TextStyle>;
   disabled?: boolean;
+  error?: string;
 }
 
 export default function TextInput({
@@ -37,6 +39,7 @@ export default function TextInput({
   inputStyle,
   labelStyle,
   disabled = false,
+  error,
 }: TextInputProps) {
   const { colors, fonts } = useTheme();
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
@@ -99,6 +102,18 @@ export default function TextInput({
           </TouchableOpacity>
         )}
       </View>
+      {error && (
+        <Text
+          style={{
+            color: "#EF4444",
+            fontSize: 12,
+            marginTop: 4,
+            fontFamily: fonts.body,
+          }}
+        >
+          {error}
+        </Text>
+      )}
     </View>
   );
 }

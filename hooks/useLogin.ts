@@ -12,16 +12,20 @@ export const useLogin = () => {
       password: string;
       system: string;
     }) => {
-      const response = await api.post(`/redagsi-mobile/auth`, data);
-      if (response.status === 200) {
-        return response.data;
-      }
-      return undefined;
+      const response = await api.post<{ token?: string; name?: string; user?: string }>(
+        `/redagsi-mobile/auth`,
+        data,
+      );
+      return response.data;
     },
-    onSuccess: (res) => {
+    onSuccess: async (res) => {
+      if (!res?.token) {
+        setMessage("Username atau password salah");
+        return;
+      }
       console.log("Login Berhasil");
-      secureStorage.setToken(res.token);
-      secureStorage.setUserData({ name: res.name, user: res.user });
+      await secureStorage.setToken(res.token);
+      await secureStorage.setUserData({ name: res.name, user: res.user });
       router.replace("/(tabs)");
     },
     onError: (err) => {

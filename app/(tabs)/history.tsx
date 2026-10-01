@@ -3,6 +3,7 @@ import { formatLocalizedDate } from "@/utils/time";
 import { Ionicons } from "@expo/vector-icons";
 import { useCallback, useState } from "react";
 import {
+  Alert,
   RefreshControl,
   ScrollView,
   StyleSheet,
@@ -25,11 +26,20 @@ export default function History() {
   const { handleGet, data, setData } = useGetAttendance();
 
   const handle = () => {
-    console.log("From Date:", formatLocalizedDate(fromDate, "YYYY-MM-DD"));
-    console.log("To Date:", formatLocalizedDate(toDate, "YYYY-MM-DD"));
+    const start = formatLocalizedDate(fromDate, "YYYY-MM-DD");
+    const end = formatLocalizedDate(toDate, "YYYY-MM-DD");
+    if (start > end) {
+      Alert.alert(
+        "Rentang Tidak Valid",
+        "Tanggal 'Dari' harus sebelum atau sama dengan tanggal 'Sampai'.",
+      );
+      return;
+    }
+    console.log("From Date:", start);
+    console.log("To Date:", end);
     handleGet({
-      start: formatLocalizedDate(fromDate, "YYYY-MM-DD"),
-      end: formatLocalizedDate(toDate, "YYYY-MM-DD"),
+      start,
+      end,
     });
     setShowData(true);
   };
@@ -84,12 +94,14 @@ export default function History() {
                 <View style={styles.datePickerWrapper}>
                   <DateTimePicker
                     label="Dari Tanggal"
+                    value={fromDate}
                     onDateChange={setFromDate}
                   />
                 </View>
                 <View style={styles.datePickerWrapper}>
                   <DateTimePicker
                     label="Sampai Tanggal"
+                    value={toDate}
                     onDateChange={setToDate}
                   />
                 </View>
@@ -110,7 +122,7 @@ export default function History() {
               <View style={styles.sectionHeader}>
                 <Text style={styles.sectionTitle}>Hasil Pencarian</Text>
                 <Text style={styles.resultCount}>
-                  {data?.length} Data ditemukan
+                  {data?.length ?? 0} Data ditemukan
                 </Text>
               </View>
               {data?.map((item, index) => (

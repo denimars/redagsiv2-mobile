@@ -26,13 +26,16 @@ export default function useGetAttendanceSchedule() {
     queryKey: ["attendance-schedule"],
     queryFn: async () => {
       const response = await api.get(`/redagsi-mobile/attendance`);
-
       if (response.status === 200) {
         return response.data;
       }
+
       return null;
     },
-    refetchInterval: 5000, // 5 seconds
+    refetchInterval: (query) => {
+      if (query.state.error) return false; // stop polling kalau error
+      return 5000;
+    }, // 5 seconds
     refetchOnWindowFocus: true,
     refetchOnMount: true,
     refetchOnReconnect: true,

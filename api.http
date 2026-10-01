@@ -4,3 +4,27 @@
 GET {{host}}/redagsi-mobile/attendace
 Authorization: Bearer {{token}}
 
+### Master data (redagsi-mobile)
+GET {{host}}/redagsi-mobile/grade
+Authorization: Bearer {{token}}
+
+GET {{host}}/redagsi-mobile/employee-status
+Authorization: Bearer {{token}}
+
+GET {{host}}/redagsi-mobile/education
+Authorization: Bearer {{token}}
+
+GET {{host}}/redagsi-mobile/marital
+Authorization: Bearer {{token}}
+
+GET {{host}}/redagsi-mobile/lesson
+Authorization: Bearer {{token}}
+
+GET {{host}}/redagsi-mobile/degree
+Authorization: Bearer {{token}}
+
+GET {{host}}/redagsi-mobile/major
+Authorization: Bearer {{token}}
+
+GET {{host}}/redagsi-mobile/competency
+Authorization: Bearer {{token}}

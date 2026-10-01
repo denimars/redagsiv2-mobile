@@ -8,8 +8,9 @@ import { Ionicons } from "@expo/vector-icons";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "expo-router";
 import { useEffect } from "react";
-import { Controller, useForm } from "react-hook-form";
+import { Controller, useForm, useWatch } from "react-hook-form";
 import {
+  Alert,
   KeyboardAvoidingView,
   Platform,
   ScrollView,
@@ -37,6 +38,7 @@ export default function LoanForm() {
     handleSubmit,
     formState: { errors },
     reset,
+    setValue,
   } = useForm<LoanFormData>({
     resolver: zodResolver(loanSchema),
     defaultValues: {
@@ -53,10 +55,12 @@ export default function LoanForm() {
       hideLoading();
       reset();
       router.back();
+      Alert.alert("Sukses", "Data berhasil disimpan.");
     },
     () => {
       hideLoading();
-    },
+      Alert.alert("Gagal", "Data gagal disimpan.");
+    }
   );
 
   useEffect(() => {
@@ -67,6 +71,20 @@ export default function LoanForm() {
     }
     return () => hideLoading();
   }, [hideLoading, isPending, showLoading]);
+
+  const amount = useWatch({ control, name: "amount" });
+  const duration_month = useWatch({ control, name: "duration_month" });
+
+  useEffect(() => {
+    const amountNum = Format.parseRupiah(amount || "0");
+    const monthNum = Number(duration_month) || 0;
+    if (amountNum > 0 && monthNum > 0) {
+      setValue(
+        "deducation_amount",
+        Format.formatToRupiah(Math.round(amountNum / monthNum), false)
+      );
+    }
+  }, [amount, duration_month, setValue]);
 
   const middleware = (data: LoanFormData) => {
     const amount = Format.parseRupiah(data.amount);
@@ -184,6 +202,7 @@ export default function LoanForm() {
                       onChangeText={(text) => onChange(text)}
                       keyboardType="numeric"
                       style={styles.textInput}
+                      disabled
                     />
                   )}
                 />

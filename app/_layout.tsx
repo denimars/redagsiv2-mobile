@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-require-imports */
 import {
   Outfit_400Regular,
   Outfit_500Medium,
@@ -5,7 +6,7 @@ import {
   useFonts,
 } from "@expo-google-fonts/outfit";
 import * as NavigationBar from "expo-navigation-bar";
-import * as Notifications from "expo-notifications";
+import Constants from "expo-constants";
 import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { StatusBar } from "expo-status-bar";
@@ -17,14 +18,19 @@ import QueryProvider from "../provider/QueryProvider";
 
 SplashScreen.preventAutoHideAsync();
 
-Notifications.setNotificationHandler({
-  handleNotification: async () => ({
-    shouldPlaySound: false,
-    shouldSetBadge: false,
-    shouldShowBanner: true,
-    shouldShowList: true,
-  }),
-});
+const isExpoGo = Constants.executionEnvironment === "storeClient";
+const Notifications = !isExpoGo ? require("expo-notifications") : null;
+
+if (Notifications) {
+  Notifications.setNotificationHandler({
+    handleNotification: async () => ({
+      shouldPlaySound: false,
+      shouldSetBadge: false,
+      shouldShowBanner: true,
+      shouldShowList: true,
+    }),
+  });
+}
 
 export default function RootLayout() {
   const [fontsLoaded, fontError] = useFonts({
@@ -84,6 +90,11 @@ export default function RootLayout() {
             <Stack.Screen name="health" />
             <Stack.Screen name="loan" />
             <Stack.Screen name="loan-application" />
+            <Stack.Screen name="ptk-menu" />
+            <Stack.Screen name="ptk-document-form" />
+            <Stack.Screen name="ptk-document-educations" />
+            <Stack.Screen name="ptk-document-competencies" />
+            <Stack.Screen name="ptk-document-training" />
           </Stack>
           <LoadingOverlay />
         </LoadingProvider>

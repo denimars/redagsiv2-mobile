@@ -1,5 +1,6 @@
+import ProfileMenuSection from "@/components/ProfileMenuSection";
 import { useTheme } from "@/context/ThemeContext";
-import { useGetUserStorage } from "@/hooks/use-get-user-storage";
+import useGetProfile from "@/hooks/get/use-get-profile";
 import useLogout from "@/hooks/useLogout";
 import { capitalizeWords } from "@/utils/general";
 import { Ionicons } from "@expo/vector-icons";
@@ -20,7 +21,7 @@ export default function Profile() {
   const styles = createStyles(colors, fonts);
   const { Logout } = useLogout();
 
-  const { userData } = useGetUserStorage();
+  const { EmployeeMobile } = useGetProfile();
 
   return (
     <View style={{ flex: 1, backgroundColor: colors.background }}>
@@ -45,11 +46,13 @@ export default function Profile() {
                 </View>
                 <View style={styles.profileInfo}>
                   <Text style={styles.profileName}>
-                    {capitalizeWords(userData?.name || "")}
+                    {capitalizeWords(
+                      EmployeeMobile?.employee_hub?.employee?.name || ""
+                    )}
                   </Text>
                   <View style={styles.nupyBadge}>
                     <Text style={styles.profileNupy}>
-                      NUPY: {userData?.user}
+                      NUPY: {EmployeeMobile?.employee_hub?.employee?.nupy}
                     </Text>
                   </View>
                 </View>
@@ -58,12 +61,22 @@ export default function Profile() {
               <View style={styles.statsContainer}>
                 <View style={styles.statItem}>
                   <Text style={styles.statLabel}>SATKER</Text>
-                  <Text style={styles.statValue}>SD IT PUTRI</Text>
+                  <Text style={styles.statValue}>
+                    {capitalizeWords(
+                      EmployeeMobile?.user_hub.role_hub[0]?.institution.name ||
+                        "-"
+                    )}
+                  </Text>
                 </View>
                 <View style={styles.statDivider} />
                 <View style={styles.statItem}>
                   <Text style={styles.statLabel}>LEMBAGA</Text>
-                  <Text style={styles.statValue}>SD IT PUTRI</Text>
+                  <Text style={styles.statValue}>
+                    {capitalizeWords(
+                      EmployeeMobile?.employee_hub?.employee?.employee_detail
+                        ?.institution?.name || "-"
+                    )}
+                  </Text>
                 </View>
               </View>
 
@@ -77,74 +90,72 @@ export default function Profile() {
                 </View>
                 <View style={styles.tupasInfo}>
                   <Text style={styles.profileLabel}>TUGAS POKOK</Text>
-                  <Text style={styles.profileTupas}>TIM IT</Text>
+                  {EmployeeMobile?.employee_hub?.employee
+                    ?.employee_responsibilities?.length ? (
+                    <View style={styles.tupasChipWrap}>
+                      {EmployeeMobile.employee_hub.employee.employee_responsibilities.map(
+                        (responsibility) => (
+                          <View
+                            key={responsibility.id}
+                            style={styles.tupasChip}
+                          >
+                            <View style={styles.tupasChipDot} />
+                            <Text style={styles.tupasChipText}>
+                              {responsibility.job_responsibility?.name}
+                            </Text>
+                          </View>
+                        )
+                      )}
+                    </View>
+                  ) : (
+                    <Text style={styles.tupasEmpty}>Belum ada tugas pokok</Text>
+                  )}
                 </View>
               </View>
             </View>
           </View>
 
           <View style={styles.bottomSection}>
-            <Text style={styles.sectionTitle}>Akun & Keamanan</Text>
+            <ProfileMenuSection
+              title="Akun & Keamanan"
+              items={[
+                {
+                  label: "Ubah Password",
+                  icon: "lock-closed",
+                  iconColor: "#0284C7",
+                  iconBgColor: "#E0F2FE",
+                  onPress: () => router.push("/change-password"),
+                },
+                {
+                  label: "Pengaturan",
+                  icon: "settings-outline",
+                  iconColor: "#16A34A",
+                  iconBgColor: "#F0FDF4",
+                  onPress: () => router.push("/settings"),
+                },
+              ]}
+            />
 
-            <View style={styles.menuContainer}>
-              <TouchableOpacity
-                style={styles.menuItem}
-                onPress={() => router.push("/change-password")}
-              >
-                <View
-                  style={[styles.iconContainer, { backgroundColor: "#E0F2FE" }]}
-                >
-                  <Ionicons name="lock-closed" size={20} color="#0284C7" />
-                </View>
-                <Text style={styles.menuText}>Ubah Password</Text>
-                <Ionicons
-                  name="chevron-forward"
-                  size={20}
-                  color={colors.secondary}
-                />
-              </TouchableOpacity>
-
-              <View style={styles.menuDivider} />
-
-              <TouchableOpacity
-                style={styles.menuItem}
-                onPress={() => router.push("/settings")}
-              >
-                <View
-                  style={[styles.iconContainer, { backgroundColor: "#F0FDF4" }]}
-                >
-                  <Ionicons name="settings-outline" size={20} color="#16A34A" />
-                </View>
-                <Text style={styles.menuText}>Pengaturan</Text>
-                <Ionicons
-                  name="chevron-forward"
-                  size={20}
-                  color={colors.secondary}
-                />
-              </TouchableOpacity>
-            </View>
-
-            <Text style={styles.sectionTitle}>Lainnya</Text>
-            <View style={styles.menuContainer}>
-              <TouchableOpacity
-                style={styles.menuItem}
-                onPress={() => Logout()}
-              >
-                <View
-                  style={[styles.iconContainer, { backgroundColor: "#FEE2E2" }]}
-                >
-                  <Ionicons name="log-out-outline" size={20} color="#DC2626" />
-                </View>
-                <Text style={[styles.menuText, { color: "#DC2626" }]}>
-                  Keluar
-                </Text>
-                <Ionicons
-                  name="chevron-forward"
-                  size={20}
-                  color={colors.secondary}
-                />
-              </TouchableOpacity>
-            </View>
+            <ProfileMenuSection
+              title="Lainnya"
+              items={[
+                {
+                  label: "PTK",
+                  icon: "person-outline",
+                  iconColor: "#4F46E5",
+                  iconBgColor: "#EEF2FF",
+                  onPress: () => router.push("/ptk-menu"),
+                },
+                {
+                  label: "Keluar",
+                  icon: "log-out-outline",
+                  iconColor: "#DC2626",
+                  iconBgColor: "#FEE2E2",
+                  onPress: () => Logout(),
+                  isDanger: true,
+                },
+              ]}
+            />
 
             <Text style={styles.versionText}>Versi 1.0.0</Text>
           </View>
@@ -277,7 +288,7 @@ const createStyles = (colors: any, fonts: any) =>
     },
     tupasContainer: {
       flexDirection: "row",
-      alignItems: "center",
+      alignItems: "flex-start",
       paddingHorizontal: 4,
     },
     tupasIconContainer: {
@@ -302,62 +313,42 @@ const createStyles = (colors: any, fonts: any) =>
       marginBottom: 2,
       opacity: 0.8,
     },
-    profileTupas: {
+    tupasChipWrap: {
+      flexDirection: "row",
+      flexWrap: "wrap",
+      gap: 8,
+      marginTop: 4,
+    },
+    tupasChip: {
+      flexDirection: "row",
+      alignItems: "center",
+      backgroundColor: `${colors.mainButton}12`,
+      borderRadius: 100,
+      paddingHorizontal: 14,
+      paddingVertical: 8,
+    },
+    tupasChipDot: {
+      width: 8,
+      height: 8,
+      borderRadius: 4,
+      backgroundColor: colors.mainButton,
+      marginRight: 8,
+    },
+    tupasChipText: {
       fontFamily: fonts.body,
-      fontSize: 15,
+      fontSize: 13,
       color: colors.text,
-      fontWeight: "bold",
+      fontWeight: "600",
+    },
+    tupasEmpty: {
+      fontFamily: fonts.body,
+      fontSize: 14,
+      color: colors.textSecondary,
+      opacity: 0.6,
+      paddingVertical: 12,
     },
     bottomSection: {
       flex: 1,
-    },
-    sectionTitle: {
-      fontFamily: fonts.heading,
-      fontSize: 17,
-      fontWeight: "bold",
-      color: colors.text,
-      marginBottom: 14,
-      marginLeft: 4,
-      opacity: 0.9,
-    },
-    menuContainer: {
-      backgroundColor: colors.card,
-      borderRadius: 24,
-      marginBottom: 24,
-      shadowColor: "#000",
-      shadowOffset: { width: 0, height: 6 },
-      shadowOpacity: 0.05,
-      shadowRadius: 15,
-      elevation: 4,
-      overflow: "hidden",
-      borderWidth: 1,
-      borderColor: colors.border || "#f0f0f0",
-    },
-    menuItem: {
-      flexDirection: "row",
-      alignItems: "center",
-      padding: 18,
-    },
-    iconContainer: {
-      width: 44,
-      height: 44,
-      borderRadius: 14,
-      justifyContent: "center",
-      alignItems: "center",
-      marginRight: 16,
-    },
-    menuText: {
-      flex: 1,
-      fontFamily: fonts.body,
-      fontSize: 16,
-      fontWeight: "bold",
-      color: colors.text,
-    },
-    menuDivider: {
-      height: 1,
-      backgroundColor: colors.border || "#F3F4F6",
-      marginLeft: 78,
-      opacity: 0.5,
     },
     versionText: {
       textAlign: "center",

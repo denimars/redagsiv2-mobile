@@ -113,7 +113,7 @@ const styles = StyleSheet.create({
 export default function TabLoyout() {
   return (
     <Tabs
-      tabBar={(props) => <CustomTabBar {...props} />}
+      tabBar={(props) => <CustomTabBar {...(props as any)} />}
       screenOptions={{
         headerShown: false,
       }}

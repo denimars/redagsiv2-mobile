@@ -2,7 +2,6 @@ import { LightThemes, ThemeType } from "@/constants/theme";
 import { useTheme } from "@/context/ThemeContext";
 import { useNotificationPermission } from "@/hooks/use-notification-permission";
 import { Ionicons } from "@expo/vector-icons";
-import * as Notifications from "expo-notifications";
 import { useRouter } from "expo-router";
 import React from "react";
 import {
@@ -193,8 +192,7 @@ export default function SettingsScreen() {
                       { color: colors.secondary, fontFamily: fonts.body },
                     ]}
                   >
-                    {notificationStatus ===
-                    Notifications.PermissionStatus.GRANTED
+                    {notificationStatus === "granted"
                       ? "Aktif"
                       : "Tidak Aktif"}
                   </Text>
@@ -202,13 +200,13 @@ export default function SettingsScreen() {
               </View>
               <Ionicons
                 name={
-                  notificationStatus === Notifications.PermissionStatus.GRANTED
+                  notificationStatus === "granted"
                     ? "notifications"
                     : "notifications-off"
                 }
                 size={24}
                 color={
-                  notificationStatus === Notifications.PermissionStatus.GRANTED
+                  notificationStatus === "granted"
                     ? colors.mainButton
                     : colors.secondary
                 }

@@ -1,32 +1,41 @@
-import { useState } from 'react';
+import { useState } from "react";
 
-const formatIndonesianDate = (date: Date) => {
-    const months = [
-        'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
-        'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'
-    ];
-    
-    const day = date.getDate();
-    const month = months[date.getMonth()];
-    const year = date.getFullYear();
-    
-    return `${day} ${month} ${year}`;
+export const formatIndonesianDate = (date: Date) => {
+  const months = [
+    "Januari",
+    "Februari",
+    "Maret",
+    "April",
+    "Mei",
+    "Juni",
+    "Juli",
+    "Agustus",
+    "September",
+    "Oktober",
+    "November",
+    "Desember",
+  ];
+
+  const day = date.getDate();
+  const month = months[date.getMonth()];
+  const year = date.getFullYear();
+
+  return `${day} ${month} ${year}`;
 };
 
-export const useDatePicker = (onDateChange: (date: Date) => void) => {
-    const [isDataPickerVisible, setIsDataPickerVisible] = useState(false);
-    const [date_, setDate] = useState(formatIndonesianDate(new Date()));
+export const useDatePicker = (onDateChange?: (date: Date) => void) => {
+  const [isDataPickerVisible, setIsDataPickerVisible] = useState(false);
 
-    const handleData = (date: Date) => {
-        setDate(formatIndonesianDate(date));
-        setIsDataPickerVisible(false);
-        onDateChange(date);
-    };
+  const handleData = (date: Date) => {
+    setIsDataPickerVisible(false);
+    if (onDateChange) {
+      onDateChange(date);
+    }
+  };
 
-    return {
-        isDataPickerVisible,
-        setIsDataPickerVisible,
-        date_,
-        handleData
-    };
+  return {
+    isDataPickerVisible,
+    setIsDataPickerVisible,
+    handleData,
+  };
 };
