@@ -7,7 +7,6 @@
     "icon": "./assets/images/icon.png",
     "scheme": "redagsimobile",
     "userInterfaceStyle": "automatic",
-    "newArchEnabled": true,
     "ios": {
       "supportsTablet": true,
       "infoPlist": {
@@ -16,21 +15,13 @@
       "bundleIdentifier": "com.fauziladhim.redagsimobile"
     },
     "android": {
-      "permission": [
-        "ACCESS_FINE_LOCATION",
-        "ACCESS_COARSE_LOCATION",
-        "ACCESS_FINE_LOCATION",
-        "ACCESS_COARSE_LOCATION"
-      ],
       "adaptiveIcon": {
         "backgroundColor": "#FFFFFF",
         "foregroundImage": "./assets/images/android-icon-foreground.png",
         "backgroundImage": "./assets/images/android-icon-background.png",
         "monochromeImage": "./assets/images/android-icon-monochrome.png"
       },
-      "edgeToEdgeEnabled": true,
       "predictiveBackGestureEnabled": false,
-      "useNextNotificationsApi": true,
       "package": "com.fauziladhim.redagsimobile"
     },
     "web": {
@@ -77,8 +68,9 @@
     "extra": {
       "router": {},
       "eas": {
-        "projectId": "51403bea-4788-4af8-9b4e-c7d7b6fffd09"
+        "projectId": "f9393275-8cbd-4d56-aefe-575a9ef42aee"
       }
-    }
+    },
+    "owner": "fauziladhim"
   }
 }

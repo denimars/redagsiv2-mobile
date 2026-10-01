@@ -38,7 +38,9 @@ yarn-error.*
 
 app-example
 .claude
-.gitignore
+
+# local backups
+*.backup
 
 # generated native folders
 /ios
