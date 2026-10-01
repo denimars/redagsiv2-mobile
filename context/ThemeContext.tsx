@@ -27,19 +27,23 @@ export function ThemeProvider({ children }: ThemeProviderProps) {
   const [themeName, setThemeName] = useState<ThemeType>("gold");
 
   useEffect(() => {
-    loadTheme();
-  }, []);
+    let isMounted = true;
 
-  const loadTheme = async () => {
-    try {
-      const savedTheme = await AsyncStorage.getItem(THEME_STORAGE_KEY);
-      if (savedTheme && savedTheme in LightThemes) {
-        setThemeName(savedTheme as ThemeType);
+    (async () => {
+      try {
+        const savedTheme = await AsyncStorage.getItem(THEME_STORAGE_KEY);
+        if (savedTheme && savedTheme in LightThemes && isMounted) {
+          setThemeName(savedTheme as ThemeType);
+        }
+      } catch (error) {
+        console.error("Failed to load theme:", error);
       }
-    } catch (error) {
-      console.error("Failed to load theme:", error);
-    }
-  };
+    })();
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   const setTheme = async (theme: ThemeType) => {
     try {
