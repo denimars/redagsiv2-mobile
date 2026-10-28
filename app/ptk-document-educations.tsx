@@ -1,3 +1,4 @@
+import { ASSET_BASE_URL } from "@/api/http";
 import { useTheme } from "@/context/ThemeContext";
 import useDeleteDocument from "@/hooks/delete/use-delete-document";
 import useGetEmployeeEducation, {
@@ -17,8 +18,6 @@ import {
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-
-const ASSET_BASE_URL = "http://192.168.1.13:8080/asset";
 
 export default function PtkDocumentEducationsScreen() {
   const { colors, fonts } = useTheme();

@@ -2,6 +2,7 @@ import DateTimePicker from "@/components/DateTimePicker";
 import Dropdownv2 from "@/components/Dropdownv2";
 import TextInput from "@/components/TextInput";
 import { useTheme } from "@/context/ThemeContext";
+import { ExitStatusOption } from "@/constants/Option";
 import useGetEmployeeStatus from "@/hooks/get/use-get-employee-status";
 import { PtkFormData } from "@/schema/ptk";
 import { Ionicons } from "@expo/vector-icons";
@@ -87,6 +88,30 @@ const SectionKarir = ({ control }: SectionProps) => {
                 value={value || ""}
                 onChangeText={onChange}
                 style={styles.input}
+              />
+            )}
+          />
+          <Controller
+            control={control}
+            name={`career.${index}.exit_date`}
+            render={({ field: { onChange, value } }) => (
+              <DateTimePicker
+                value={value}
+                label="Tanggal Keluar/Pemberhentian"
+                onDateChange={onChange}
+              />
+            )}
+          />
+          <Controller
+            control={control}
+            name={`career.${index}.exit_status`}
+            render={({ field: { onChange, value } }) => (
+              <Dropdownv2
+                label="Status Keluar"
+                options={ExitStatusOption}
+                selectedValue={value || ""}
+                onValueChange={onChange}
+                placeholder="Pilih status keluar"
               />
             )}
           />

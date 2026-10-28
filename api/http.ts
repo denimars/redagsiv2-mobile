@@ -2,9 +2,12 @@ import axios, { AxiosResponse } from "axios";
 import { router } from "expo-router";
 import { secureStorage } from "../utils/secureStorage";
 
+const baseURL = "http://192.168.1.13:8080/api";
+const ASSET_BASE_URL = "http://192.168.1.13:8080/asset";
+
 const api = axios.create({
-  baseURL: "https://api-staging-sipahamv2.ponpesabuhurairah.id/api",
-  // baseURL: "http://192.168.1.13:8080/api",
+  baseURL,
+  // baseURL: "https://api-staging-sipahamv2.ponpesabuhurairah.id/api",
   // baseURL: "http://10.44.244.34:8080/api",
   timeout: 15000,
 });
@@ -30,5 +33,7 @@ api.interceptors.response.use(
     throw err;
   }
 );
+
+export { ASSET_BASE_URL };
 
 export default api;

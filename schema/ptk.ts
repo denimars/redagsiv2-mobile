@@ -77,12 +77,24 @@ export const EmployeeTrainingSchema = z.object({
   year: z.string().optional(),
 });
 
-export const EmployeeCareerSchema = z.object({
-  enrollment_date: z.date().optional(),
-  employment_status: z.string().optional(),
-  sk_number: z.string().optional(),
-  sk_url: z.string().optional(),
-});
+export const EmployeeCareerSchema = z
+  .object({
+    enrollment_date: z.date().optional(),
+    employment_status: z.string().optional(),
+    sk_number: z.string().optional(),
+    sk_url: z.string().optional(),
+    exit_date: z.date().optional(),
+    exit_status: z.string().optional(),
+  })
+  .superRefine((data, ctx) => {
+    if (data.exit_status && !data.exit_date) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "Tanggal keluar wajib diisi jika status keluar dipilih",
+        path: ["exit_date"],
+      });
+    }
+  });
 
 export const EmployeeLessonSchema = z.object({
   lesson: z.string().optional(),

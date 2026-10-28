@@ -120,12 +120,18 @@ export default function useUpdateEmployee(
         employment_status: string;
         sk_number: string;
         sk_url: string;
+        exit_date?: Date;
+        exit_status?: string;
       }) => {
         return {
           enrollment_date: formatLocalizedDate(item.enrollment_date),
           employment_status: Number(item.employment_status),
           sk_number: item.sk_number,
           sk_url: item.sk_url,
+          exit_date: item.exit_date
+            ? formatLocalizedDate(item.exit_date)
+            : null,
+          exit_status: item.exit_status ? Number(item.exit_status) : null,
         };
       }
     );

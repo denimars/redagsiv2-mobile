@@ -15,7 +15,7 @@ export default function useGetIncome() {
   const { data, isLoading, isError, refetch } = useQuery<Income[]>({
     queryKey: ["incomes"],
     queryFn: async () => {
-      const response = await api.get("/student/income");
+      const response = await api.get("/redagsi-mobile/income");
       if (response.status === 200) {
         setIncomes(
           response.data.map((item: Income) => ({

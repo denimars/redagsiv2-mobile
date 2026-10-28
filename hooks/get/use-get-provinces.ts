@@ -13,7 +13,7 @@ export default function useGetProvinces() {
   const { data, isLoading, isError, refetch } = useQuery<Province[]>({
     queryKey: ["provinces"],
     queryFn: async () => {
-      const response = await api.get("/student/province");
+      const response = await api.get("/redagsi-mobile/province");
       if (response.status === 200) {
         setProvinces(
           response.data.map((item: Province) => ({

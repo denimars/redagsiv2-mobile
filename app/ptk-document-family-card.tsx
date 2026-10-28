@@ -1,13 +1,14 @@
+import { ASSET_BASE_URL } from "@/api/http";
 import { useTheme } from "@/context/ThemeContext";
 import useDeleteDocument from "@/hooks/delete/use-delete-document";
 import useGetEmployeeFamilyCard from "@/hooks/get/use-get-employee-family-card";
 import useUploadFamilyCard from "@/hooks/post/use-upload-family-card";
 import { documentUploadSchema } from "@/schema/document-upload";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { Ionicons } from "@expo/vector-icons";
+import { zodResolver } from "@hookform/resolvers/zod";
 import * as DocumentPicker from "expo-document-picker";
 import { useRouter } from "expo-router";
-import React, { useCallback, useState } from "react";
+import { useCallback, useState } from "react";
 import { useForm } from "react-hook-form";
 import {
   Alert,
@@ -18,8 +19,6 @@ import {
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-
-const ASSET_BASE_URL = "http://192.168.1.13:8080/asset";
 
 export default function PtkDocumentFamilyCardScreen() {
   const { colors, fonts } = useTheme();
@@ -73,14 +72,14 @@ export default function PtkDocumentFamilyCardScreen() {
       {
         onSettled: () => setUploadError(null),
         onError: () => undefined,
-      },
+      }
     );
   }, [setValue, trigger, uploadDocument, current?.id, errors.fileUri?.message]);
 
   const handleView = useCallback(() => {
     if (!current) return;
     router.push(
-      `/ptk-document-viewer?url=${encodeURIComponent(`${ASSET_BASE_URL}/${current.url}`)}`,
+      `/ptk-document-viewer?url=${encodeURIComponent(`${ASSET_BASE_URL}/${current.url}`)}`
     );
   }, [router, current]);
 
@@ -180,7 +179,10 @@ export default function PtkDocumentFamilyCardScreen() {
                   <Text
                     style={[
                       styles.itemSubtitle,
-                      { color: colors.secondary || "#888", fontFamily: fonts.body },
+                      {
+                        color: colors.secondary || "#888",
+                        fontFamily: fonts.body,
+                      },
                     ]}
                   >
                     {hasUploaded
@@ -206,7 +208,10 @@ export default function PtkDocumentFamilyCardScreen() {
 
               {hasUploaded ? (
                 <View style={styles.actionRow}>
-                  <TouchableOpacity style={styles.actionButton} onPress={handleView}>
+                  <TouchableOpacity
+                    style={styles.actionButton}
+                    onPress={handleView}
+                  >
                     <Ionicons name="eye-outline" size={18} color="#0284C7" />
                     <Text
                       style={[
@@ -222,7 +227,11 @@ export default function PtkDocumentFamilyCardScreen() {
                     onPress={handlePick}
                     disabled={isPending}
                   >
-                    <Ionicons name="refresh-outline" size={18} color="#D97706" />
+                    <Ionicons
+                      name="refresh-outline"
+                      size={18}
+                      color="#D97706"
+                    />
                     <Text
                       style={[
                         styles.actionText,
@@ -254,7 +263,9 @@ export default function PtkDocumentFamilyCardScreen() {
                   disabled={isPending}
                 >
                   <Ionicons
-                    name={isPending ? "hourglass-outline" : "cloud-upload-outline"}
+                    name={
+                      isPending ? "hourglass-outline" : "cloud-upload-outline"
+                    }
                     size={18}
                     color={isPending ? "#888" : "#0284C7"}
                   />
@@ -267,7 +278,9 @@ export default function PtkDocumentFamilyCardScreen() {
                       },
                     ]}
                   >
-                    {isPending ? "Mengunggah..." : "Unggah Dokumen Kartu Keluarga"}
+                    {isPending
+                      ? "Mengunggah..."
+                      : "Unggah Dokumen Kartu Keluarga"}
                   </Text>
                 </TouchableOpacity>
               )}

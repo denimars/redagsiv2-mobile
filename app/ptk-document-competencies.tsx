@@ -1,3 +1,4 @@
+import { ASSET_BASE_URL } from "@/api/http";
 import { useTheme } from "@/context/ThemeContext";
 import useDeleteDocument from "@/hooks/delete/use-delete-document";
 import useGetEmployeeCompetency, {
@@ -7,7 +8,7 @@ import useDocumentUploadForm from "@/hooks/post/use-document-upload-form";
 import { Ionicons } from "@expo/vector-icons";
 import * as DocumentPicker from "expo-document-picker";
 import { useRouter } from "expo-router";
-import React, { useCallback, useState } from "react";
+import { useCallback, useState } from "react";
 import {
   Alert,
   FlatList,
@@ -17,8 +18,6 @@ import {
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-
-const ASSET_BASE_URL = "http://192.168.1.13:8080/asset";
 
 export default function PtkDocumentCompetenciesScreen() {
   const { colors, fonts } = useTheme();
@@ -67,7 +66,7 @@ export default function PtkDocumentCompetenciesScreen() {
             data,
             item.id,
             item.employee_document_competency?.id,
-            () => setUploadingId(null),
+            () => setUploadingId(null)
           );
         },
         (errors) => {
@@ -76,17 +75,19 @@ export default function PtkDocumentCompetenciesScreen() {
             [item.id]: errors.fileUri?.message || "",
           }));
           setUploadingId(null);
-        },
+        }
       )();
     },
-    [setValue, handleSubmit, submitWithContext],
+    [setValue, handleSubmit, submitWithContext]
   );
 
   const handleView = useCallback(
     (url: string) => {
-      router.push(`/ptk-document-viewer?url=${encodeURIComponent(`${ASSET_BASE_URL}/${url}`)}`);
+      router.push(
+        `/ptk-document-viewer?url=${encodeURIComponent(`${ASSET_BASE_URL}/${url}`)}`
+      );
     },
-    [router],
+    [router]
   );
 
   const confirmDelete = (id: string) => {

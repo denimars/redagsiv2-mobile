@@ -95,6 +95,7 @@ export default function RootLayout() {
             <Stack.Screen name="ptk-document-educations" />
             <Stack.Screen name="ptk-document-competencies" />
             <Stack.Screen name="ptk-document-training" />
+            <Stack.Screen name="ptk-document-identity-card" />
           </Stack>
           <LoadingOverlay />
         </LoadingProvider>

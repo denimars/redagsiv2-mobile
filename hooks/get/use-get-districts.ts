@@ -15,7 +15,7 @@ export default function useGetDistricts(regencyId: string) {
     queryKey: ["districts", regencyId],
     queryFn: async () => {
       const response = await api.get(
-        `/student/district?regency_id=${regencyId}`,
+        `/redagsi-mobile/district?regency_id=${regencyId}`,
       );
       if (response.status === 200) {
         setDistricts(

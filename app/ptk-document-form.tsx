@@ -58,6 +58,15 @@ const DOCUMENT_MENU_ITEMS: DocumentMenuItem[] = [
     iconBgColor: "#E0F2FE",
     route: "/ptk-document-family-card",
   },
+  {
+    id: "ktp",
+    label: "KTP",
+    description: "Dokumen kartu tanda penduduk",
+    icon: "card-outline",
+    iconColor: "#4F46E5",
+    iconBgColor: "#EEF2FF",
+    route: "/ptk-document-identity-card",
+  },
 ];
 
 export default function PtkDocumentMenuScreen() {

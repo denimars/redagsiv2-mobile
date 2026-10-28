@@ -215,6 +215,8 @@ export default function PtkFormScreen() {
                 employment_status: toStr(career?.employment_status),
                 sk_number: career.sk_number,
                 sk_url: career.sk_url,
+                exit_date: toValidDate(career.exit_date),
+                exit_status: toStr(career?.exit_status),
               }),
             )
           : [{}],

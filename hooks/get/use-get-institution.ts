@@ -13,7 +13,7 @@ export default function useGetInstitution() {
   const { data, isLoading, isError, refetch } = useQuery<Institution[]>({
     queryKey: ["institutions"],
     queryFn: async () => {
-      const response = await api.get("/institution/redagsi-mobile");
+      const response = await api.get("/redagsi-mobile/institution");
       if (response.status === 200) {
         setInstitutions(
           response.data.map((item: Institution) => ({

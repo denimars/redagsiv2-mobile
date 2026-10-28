@@ -8,7 +8,6 @@ import useGetInstitution from "@/hooks/get/use-get-institution";
 import useGetMajor from "@/hooks/get/use-get-major";
 import useGetMarital from "@/hooks/get/use-get-marital";
 import { PtkFormData } from "@/schema/ptk";
-import React from "react";
 import { Control, Controller, useFormState } from "react-hook-form";
 import { StyleSheet, View } from "react-native";
 
@@ -40,6 +39,7 @@ const SectionGtk = ({ control }: SectionProps) => {
             onValueChange={onChange}
             placeholder={isLoadingInstitution ? "Memuat..." : "Pilih lembaga"}
             error={errors.employee_detail?.institution?.message}
+            disabled
           />
         )}
       />

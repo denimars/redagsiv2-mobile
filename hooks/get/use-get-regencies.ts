@@ -15,7 +15,7 @@ export default function useGetRegencies(provinceId: string) {
     queryKey: ["regencies", provinceId],
     queryFn: async () => {
       const response = await api.get(
-        `/student/regency?province_id=${provinceId}`,
+        `/redagsi-mobile/regency?province_id=${provinceId}`,
       );
       if (response.status === 200) {
         setRegencies(

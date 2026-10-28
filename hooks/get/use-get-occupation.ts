@@ -13,7 +13,7 @@ export default function useGetOccupation() {
   const { data, isLoading, isError, refetch } = useQuery<Occupation[]>({
     queryKey: ["occupations"],
     queryFn: async () => {
-      const response = await api.get("/student/occupation");
+      const response = await api.get("/redagsi-mobile/occupation");
       if (response.status === 200) {
         setOccupations(
           response.data.map((item: Occupation) => ({

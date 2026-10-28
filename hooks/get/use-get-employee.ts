@@ -75,6 +75,8 @@ export interface EmployeeHistoricalStatuses {
   enrollment_date: string;
   sk_number: string;
   sk_url: string;
+  exit_date?: string | null;
+  exit_status?: number | null;
 }
 
 export interface Spouse {
