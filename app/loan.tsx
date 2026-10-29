@@ -30,7 +30,7 @@ export default function LoanList() {
   const renderStatus = (
     is_approved: boolean | null,
     is_paid_off: boolean | null,
-    is_disbursement: boolean | null,
+    is_disbursement: boolean | null
   ) => {
     if (is_paid_off) {
       return (
@@ -145,7 +145,9 @@ export default function LoanList() {
           refreshControl={
             <RefreshControl
               refreshing={isLoading}
-              onRefresh={refetch}
+              onRefresh={async () => {
+                await refetch();
+              }}
               tintColor={colors.mainButton}
             />
           }
@@ -177,7 +179,7 @@ export default function LoanList() {
                 />
                 <Text style={styles.emptyText}>Belum ada data pinjaman</Text>
               </View>
-            ) : null
+            ) : undefined
           }
         />
       </SafeAreaView>

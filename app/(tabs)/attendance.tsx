@@ -1,7 +1,7 @@
 import useGetAttendanceSchedule from "@/hooks/get/use-get-attendance-schedule";
 import { formatLocalizedDate } from "@/utils/time";
 import { Ionicons } from "@expo/vector-icons";
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import {
   Animated,
   Linking,
@@ -54,7 +54,8 @@ export default function Absensi() {
 
   // Animation values
   const [pulseAnim] = useState(() => new Animated.Value(1));
-  const announcementScrollRef = useRef<ScrollView>(null);
+  const announcementScrollRef =
+    useRef<React.ComponentRef<typeof ScrollView>>(null);
   const announcementIndex = useRef(0);
 
   useEffect(() => {
@@ -71,7 +72,7 @@ export default function Absensi() {
           duration: 1500,
           useNativeDriver: true,
         }),
-      ]),
+      ])
     );
 
     pulseAnimation.start();
@@ -137,13 +138,13 @@ export default function Absensi() {
     (isScheduleLoading || !location || !AttendanceSchedule) && !error;
 
   const distanceToLocation = location?.coords
-      ? convertLatLongToKm(
-          location.coords.latitude,
-          location.coords.longitude,
-          AttendanceSchedule?.location?.lat || 0,
-          AttendanceSchedule?.location?.long || 0,
-        )
-      : null;
+    ? convertLatLongToKm(
+        location.coords.latitude,
+        location.coords.longitude,
+        AttendanceSchedule?.location?.lat || 0,
+        AttendanceSchedule?.location?.long || 0
+      )
+    : null;
 
   const isInRange =
     distanceToLocation !== null &&
@@ -322,8 +323,8 @@ export default function Absensi() {
                                 backgroundColor: showAbsensi().absensi
                                   ? "#10B981"
                                   : isInRange
-                                    ? "#FBBF24"
-                                    : "#EF4444",
+                                  ? "#FBBF24"
+                                  : "#EF4444",
                               },
                             ]}
                           />
@@ -331,8 +332,8 @@ export default function Absensi() {
                             {showAbsensi().absensi
                               ? "Sudah Absen"
                               : isInRange
-                                ? "Belum Absen"
-                                : "Luar Area"}
+                              ? "Belum Absen"
+                              : "Luar Area"}
                           </Text>
                         </View>
                       )}
@@ -380,8 +381,8 @@ export default function Absensi() {
                         showAbsensi().absensi
                           ? "checkmark-circle-outline"
                           : showAbsensi().text === "Absen Masuk"
-                            ? "log-in-outline"
-                            : "log-out-outline"
+                          ? "log-in-outline"
+                          : "log-out-outline"
                       }
                       size={32}
                       color="#fff"

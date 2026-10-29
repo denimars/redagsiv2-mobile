@@ -27,7 +27,7 @@ export const useLogin = () => {
       console.log("Login Berhasil");
       await secureStorage.setToken(res.token);
       await secureStorage.setUserData({ name: res.name, user: res.user });
-      router.replace("/(tabs)");
+      router.replace("/(tabs)/attendance");
     },
     onError: (err) => {
       setMessage("Username atau password salah");

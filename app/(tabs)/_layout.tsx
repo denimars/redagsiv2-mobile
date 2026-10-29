@@ -1,19 +1,24 @@
 import { useTheme } from "@/context/ThemeContext";
 import { Ionicons } from "@expo/vector-icons";
-import { BottomTabBarProps } from "@react-navigation/bottom-tabs";
-import { Tabs } from "expo-router";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { router, Tabs } from "expo-router";
+import {
+  Platform,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 
-function CustomTabBar({ state, descriptors, navigation }: BottomTabBarProps) {
+function CustomTabBar({ state, descriptors, navigation }: any) {
   const { colors, fonts } = useTheme();
 
-  const getIconName = (routeName: string, focused: boolean) => {
+  const getIconName = (routeName: string, focused: boolean): any => {
     switch (routeName) {
       case "finansial":
         return focused ? "card" : "card-outline";
       case "history":
         return focused ? "people" : "people-outline";
-      case "index":
+      case "attendance":
         return focused ? "location" : "location-outline";
       case "qr":
         return focused ? "qr-code" : "qr-code-outline";
@@ -26,47 +31,55 @@ function CustomTabBar({ state, descriptors, navigation }: BottomTabBarProps) {
 
   return (
     <View style={[styles.tabBar, { backgroundColor: colors.tabBar }]}>
-      {state.routes.map((route, index) => {
-        const { options } = descriptors[route.key];
+      {state.routes.map((route: any, index: number) => {
+        const options = descriptors[route.key]?.options ?? {};
         const label = options.title || route.name;
         const isFocused = state.index === index;
 
         const onPress = () => {
-          const event = navigation.emit({
-            type: "tabPress",
-            target: route.key,
-            canPreventDefault: true,
-          });
+          if (isFocused) return;
 
-          if (!isFocused && !event.defaultPrevented) {
-            navigation.navigate(route.name);
-          }
+          router.navigate({
+            pathname: `/(tabs)/${route.name}` as any,
+          });
         };
 
         return (
           <TouchableOpacity
             key={route.key}
+            accessibilityRole="button"
+            accessibilityState={isFocused ? { selected: true } : {}}
+            accessibilityLabel={options.tabBarAccessibilityLabel}
+            testID={options.tabBarButtonTestID}
             onPress={onPress}
+            onLongPress={() =>
+              navigation?.emit?.({
+                type: "tabLongPress",
+                target: route.key,
+              })
+            }
             style={styles.tabItem}
           >
             <Ionicons
-              name={getIconName(route.name, isFocused) as any}
+              name={getIconName(route.name, isFocused)}
               size={24}
               color={isFocused ? colors.mainButton : colors.tabBarInActive}
             />
+
             <Text
               style={[
                 styles.tabLabel,
                 {
                   fontFamily: fonts.body,
                   color: isFocused ? colors.mainButton : colors.tabBarInActive,
-                  fontSize: 10, // Slightly smaller to fit 6 tabs
+                  fontSize: 10,
                 },
               ]}
               numberOfLines={1}
             >
               {label}
             </Text>
+
             {isFocused && (
               <View
                 style={[
@@ -85,11 +98,11 @@ function CustomTabBar({ state, descriptors, navigation }: BottomTabBarProps) {
 const styles = StyleSheet.create({
   tabBar: {
     flexDirection: "row",
-    height: 65, // Increased height slightly for better spacing
+    height: 65,
     elevation: 8,
     shadowOpacity: 0.1,
     borderTopWidth: 0,
-    paddingBottom: 5,
+    paddingBottom: Platform.OS === "ios" ? 5 : 5,
   },
   tabItem: {
     flex: 1,
@@ -103,24 +116,24 @@ const styles = StyleSheet.create({
   underline: {
     position: "absolute",
     bottom: 0,
-    left: "15%", // Adjusted for more tabs
+    left: "15%",
     right: "15%",
     height: 3,
     borderRadius: 2,
   },
 });
 
-export default function TabLoyout() {
+export default function TabLayout() {
   return (
     <Tabs
-      tabBar={(props) => <CustomTabBar {...(props as any)} />}
+      tabBar={(props) => <CustomTabBar {...props} />}
       screenOptions={{
         headerShown: false,
       }}
     >
       <Tabs.Screen name="finansial" options={{ title: "Finansial" }} />
       <Tabs.Screen name="history" options={{ title: "Riwayat" }} />
-      <Tabs.Screen name="index" options={{ title: "Absensi" }} />
+      <Tabs.Screen name="attendance" options={{ title: "Absensi" }} />
       <Tabs.Screen name="qr" options={{ title: "QR" }} />
       <Tabs.Screen name="profile" options={{ title: "Profil" }} />
     </Tabs>
