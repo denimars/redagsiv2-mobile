@@ -5,6 +5,7 @@ import { secureStorage } from "../utils/secureStorage";
 const baseURL = "http://192.168.1.13:8080/api";
 const ASSET_BASE_URL = "http://192.168.1.13:8080/asset";
 
+// eslint-disable-next-line import/no-named-as-default-member
 const api = axios.create({
   baseURL,
   // baseURL: "https://api-staging-sipahamv2.ponpesabuhurairah.id/api",
